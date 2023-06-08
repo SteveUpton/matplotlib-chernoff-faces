@@ -1,6 +1,8 @@
+import matplotlib.pyplot as plt
 from cface import cface
 
-def test_always_passes():
-    ax = {}
-    actual = cface(ax)
-    assert actual == ax
+def test_ticks_removed():
+    fig, axes = plt.subplots()
+    ax = cface(axes)
+    assert ax.get_xticks().size == 0
+    assert ax.get_yticks().size == 0
