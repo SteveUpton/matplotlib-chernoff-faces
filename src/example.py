@@ -7,5 +7,6 @@ fig, axes = plt.subplots()
 
 df = pd.DataFrame([[0, 0], [1, 1], [2, 2]], columns=['A', 'B'])
 
-cface(ax=axes, row=df.loc[0])
+row = df.iloc[1]
+cface(ax=axes, row=row)
 plt.show()

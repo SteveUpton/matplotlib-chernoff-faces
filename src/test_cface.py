@@ -25,3 +25,9 @@ def test_accepts_row(df_row_simple):
     fig, axes = plt.subplots()
     ax = cface(axes, df_row_simple)
     assert ax
+
+@pytest.mark.usefixtures('df_row_simple')
+def test_sets_axis_title(df_row_simple):
+    fig, axes = plt.subplots()
+    ax = cface(axes, df_row_simple)
+    assert axes.get_title(loc='left') == '0'
