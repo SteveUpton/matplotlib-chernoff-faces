@@ -8,7 +8,8 @@ from cface import cface
 def df_row_simple():
     return pd.DataFrame([[1, 2]], columns=['A', 'B']).loc[0]
 
-def test_ticks_removed():
+@pytest.mark.usefixtures('df_row_simple')
+def test_ticks_removed(df_row_simple):
     fig, axes = plt.subplots()
     ax = cface(axes, df_row_simple)
     assert ax.get_xticks().size == 0
@@ -19,7 +20,8 @@ def test_rejects_missing_row():
         fig, axes = plt.subplots()
         ax = cface(axes)
 
-def test_accepts_row():
+@pytest.mark.usefixtures('df_row_simple')
+def test_accepts_row(df_row_simple):
     fig, axes = plt.subplots()
     ax = cface(axes, df_row_simple)
     assert ax
