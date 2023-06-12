@@ -31,3 +31,10 @@ def test_sets_axis_title(df_row_simple):
     fig, axes = plt.subplots()
     ax = cface(axes, df_row_simple)
     assert axes.get_title(loc='left') == '0'
+
+@pytest.mark.usefixtures('df_row_simple')
+def test_sets_axis_limits(df_row_simple):
+    fig, axes = plt.subplots()
+    ax = cface(axes, df_row_simple)
+    assert axes.get_xlim() == (-1.0, 1.0)
+    assert axes.get_ylim() == (-1.0, 1.0)
