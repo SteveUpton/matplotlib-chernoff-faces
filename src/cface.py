@@ -18,6 +18,8 @@ def cface(ax=None, row=None):
     eye_height = 0.2
     eye_angle = 110
     pupil_size = 0.04
+    mouth_length = 30
+    mouth_height = 0.1
 
     # Draw nose
     nose = matplotlib.patches.Ellipse([0,0], nose_width, nose_length)
@@ -44,6 +46,11 @@ def cface(ax=None, row=None):
     left_pupil.set(color='Black')
     ax.add_artist(right_pupil)
     ax.add_artist(left_pupil)
+
+    # Draw mouth
+    mouth = matplotlib.patches.Arc([0,mouth_height], 1, 1, angle=-90-mouth_length/2, theta1=0, theta2=mouth_length)
+    mouth.set(edgecolor='Black')
+    ax.add_artist(mouth)
 
     ax.set_xticks([])
     ax.set_yticks([])
