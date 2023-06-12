@@ -17,7 +17,7 @@ def cface(ax=None, row=None):
     eye_spacing = 0.25
     eye_height = 0.2
     eye_angle = 110
-    pipil_size = 0.04
+    pupil_size = 0.04
 
     # Draw nose
     nose = matplotlib.patches.Ellipse([0,0], nose_width, nose_length)
@@ -38,9 +38,9 @@ def cface(ax=None, row=None):
     ax.add_artist(left_eye)
 
     # Draw pupils
-    right_pupil = matplotlib.patches.Circle([eye_spacing, eye_height], pipil_size)
+    right_pupil = matplotlib.patches.Circle([eye_spacing, eye_height], pupil_size)
     right_pupil.set(color='Black')
-    left_pupil = matplotlib.patches.Circle([-eye_spacing, eye_height], pipil_size)
+    left_pupil = matplotlib.patches.Circle([-eye_spacing, eye_height], pupil_size)
     left_pupil.set(color='Black')
     ax.add_artist(right_pupil)
     ax.add_artist(left_pupil)
