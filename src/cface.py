@@ -1,4 +1,5 @@
 import matplotlib
+import math
 
 def cface(ax=None, row=None):
     if row is None:
@@ -20,6 +21,9 @@ def cface(ax=None, row=None):
     pupil_size = 0.04
     mouth_length = 30
     mouth_height = 0.1
+    eyebrow_length = 0.2
+    eyebrow_angle = 30
+    eyebrow_height = 0.1
 
     # Draw nose
     nose = matplotlib.patches.Ellipse([0,0], nose_width, nose_length)
@@ -46,6 +50,18 @@ def cface(ax=None, row=None):
     left_pupil.set(color='Black')
     ax.add_artist(right_pupil)
     ax.add_artist(left_pupil)
+
+    # Draw eyebrows
+    eyebrow_opp = math.sin(math.radians(eyebrow_angle)) * eyebrow_length
+    eyebrow_adj = math.cos(math.radians(eyebrow_angle)) * eyebrow_length
+    eyebrow_spacing = eye_spacing - eye_length/2
+    eyebrow_height_adjusted = eye_height + eyebrow_height
+    right_eyebrow = matplotlib.lines.Line2D([eyebrow_spacing, eyebrow_spacing+eyebrow_adj], [eyebrow_height_adjusted, eyebrow_height_adjusted+eyebrow_opp])
+    right_eyebrow.set(color='Black')
+    left_eyebrow = matplotlib.lines.Line2D([-eyebrow_spacing, -eyebrow_spacing-eyebrow_adj], [eyebrow_height_adjusted, eyebrow_height_adjusted+eyebrow_opp])
+    left_eyebrow.set(color='Black')
+    ax.add_artist(left_eyebrow)
+    ax.add_artist(right_eyebrow)
 
     # Draw mouth
     mouth = matplotlib.patches.Arc([0,mouth_height], 1, 1, angle=-90-mouth_length/2, theta1=0, theta2=mouth_length)
