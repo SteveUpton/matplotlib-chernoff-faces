@@ -54,8 +54,8 @@ def cface(ax=None, row=None):
     # Draw eyebrows
     eyebrow_opp = math.sin(math.radians(eyebrow_angle)) * eyebrow_length
     eyebrow_adj = math.cos(math.radians(eyebrow_angle)) * eyebrow_length
-    eyebrow_spacing = eye_spacing - eye_length/2
-    eyebrow_height_adjusted = eye_height + eyebrow_height
+    eyebrow_spacing = eye_spacing - eyebrow_length/2
+    eyebrow_height_adjusted = eye_height + eyebrow_height + eye_width/2 + 0.05
     right_eyebrow = matplotlib.lines.Line2D([eyebrow_spacing, eyebrow_spacing+eyebrow_adj], [eyebrow_height_adjusted, eyebrow_height_adjusted+eyebrow_opp])
     right_eyebrow.set(color='Black')
     left_eyebrow = matplotlib.lines.Line2D([-eyebrow_spacing, -eyebrow_spacing-eyebrow_adj], [eyebrow_height_adjusted, eyebrow_height_adjusted+eyebrow_opp])
