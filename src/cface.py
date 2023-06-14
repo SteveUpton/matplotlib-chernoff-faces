@@ -38,59 +38,39 @@ class CFace():
                  eyebrow_angle=defaults['eyebrow_angle'],
                  eyebrow_height=defaults['eyebrow_height']):
 
-        self.nose_width = nose_width
-        self.nose_length = nose_length
-        self.head_width = head_width
-        self.head_length = head_length
-        self.eye_length = eye_length
-        self.eye_width = eye_width
-        self.eye_spacing = eye_spacing
-        self.eye_height = eye_height
-        self.eye_angle = eye_angle
-        self.pupil_size = pupil_size
-        self.mouth_length = mouth_length
-        self.mouth_height = mouth_height
-        self.eyebrow_length = eyebrow_length
-        self.eyebrow_angle = eyebrow_angle
-        self.eyebrow_height = eyebrow_height
+        self.features = {
+            'nose_width': nose_width,
+            'nose_length': nose_length,
+            'head_width': head_width,
+            'head_length': head_length,
+            'eye_width': eye_width,
+            'eye_length': eye_length,
+            'eye_spacing': eye_spacing,
+            'eye_height': eye_height,
+            'eye_angle': eye_angle,
+            'pupil_size': pupil_size,
+            'mouth_length': mouth_length,
+            'mouth_height': mouth_height,
+            'eyebrow_length': eyebrow_length,
+            'eyebrow_angle': eyebrow_angle,
+            'eyebrow_height': eyebrow_height
+        }
 
         self._validate_feature_ranges()
 
     def _validate_feature_ranges(self):
-        if self.nose_width > 1 or self.nose_width < 0:
-            raise ValueError('nose_width must be within the range 0 to 1')
-        if self.nose_length > 1 or self.nose_length < 0:
-            raise ValueError('nose_length must be within the range 0 to 1')
-        if self.head_width > 1 or self.head_width < 0:
-            raise ValueError('head_width must be within the range 0 to 1')
-        if self.head_length > 1 or self.head_length < 0:
-            raise ValueError('head_length must be within the range 0 to 1')
-        if self.eye_length > 1 or self.eye_length < 0:
-            raise ValueError('eye_length must be within the range 0 to 1')
-        if self.eye_width > 1 or self.eye_width < 0:
-            raise ValueError('eye_width must be within the range 0 to 1')
-        if self.eye_spacing > 1 or self.eye_spacing < 0:
-            raise ValueError('eye_spacing must be within the range 0 to 1')
-        if self.eye_height > 1 or self.eye_height < 0:
-            raise ValueError('eye_height must be within the range 0 to 1')
-        if self.eye_angle > 1 or self.eye_angle < 0:
-            raise ValueError('eye_angle must be within the range 0 to 1')
-        if self.pupil_size > 1 or self.pupil_size < 0:
-            raise ValueError('pupil_size must be within the range 0 to 1')
-        if self.mouth_length > 1 or self.mouth_length < 0:
-            raise ValueError('mouth_length must be within the range 0 to 1')
-        if self.mouth_height > 1 or self.mouth_height < 0:
-            raise ValueError('mouth_height must be within the range 0 to 1')
-        if self.eyebrow_length > 1 or self.eyebrow_length < 0:
-            raise ValueError('eyebrow_length must be within the range 0 to 1')
-        if self.eyebrow_angle > 1 or self.eyebrow_angle < 0:
-            raise ValueError('eyebrow_angle must be within the range 0 to 1')
-        if self.eyebrow_height > 1 or self.eyebrow_height < 0:
-            raise ValueError('eyebrow_height must be within the range 0 to 1')
+        for feature, value in self.features.items():
+            if value > 1 or value < 0:
+                raise ValueError('{} value {} must be within the range 0 to 1'.format(feature, value))
         return
     
     def plot(self, axes=None, name=None):
         ax = axes
+
+        scaled_features = self.features
+        for feature, value in self.features.items():
+            scaled_features[feature] = value
+
         # Set axes limits to support absolute drawing
         ax.set_xlim([-1, 1])
         ax.set_ylim([-1, 1])
@@ -101,36 +81,36 @@ class CFace():
         ax.set_title(name, loc='left', x=0.02, y=0.02)
 
         # Draw nose
-        nose = matplotlib.patches.Ellipse([0,0], self.nose_width, self.nose_length)
+        nose = matplotlib.patches.Ellipse([0,0], scaled_features['nose_width'], scaled_features['nose_length'])
         nose.set(edgecolor='Black', fill=False)
         ax.add_artist(nose)
 
         # Draw head
-        head = matplotlib.patches.Ellipse([0,0], self.head_width, self.head_length)
+        head = matplotlib.patches.Ellipse([0,0], scaled_features['head_width'], scaled_features['head_length'])
         head.set(edgecolor='Black', fill=False)
         ax.add_artist(head)
 
         # Draw eyes
-        right_eye = matplotlib.patches.Ellipse([self.eye_spacing, self.eye_height], self.eye_width, self.eye_length, angle=self.eye_angle)
+        right_eye = matplotlib.patches.Ellipse([scaled_features['eye_spacing'], scaled_features['eye_height']], scaled_features['eye_width'], scaled_features['eye_length'], angle=scaled_features['eye_angle'])
         right_eye.set(edgecolor='Black', fill=False)
-        left_eye = matplotlib.patches.Ellipse([-self.eye_spacing, self.eye_height], self.eye_width, self.eye_length, angle=-self.eye_angle)
+        left_eye = matplotlib.patches.Ellipse([-scaled_features['eye_spacing'], scaled_features['eye_height']], scaled_features['eye_width'], scaled_features['eye_length'], angle=-scaled_features['eye_angle'])
         left_eye.set(edgecolor='Black', fill=False)
         ax.add_artist(right_eye)
         ax.add_artist(left_eye)
 
         # Draw pupils
-        right_pupil = matplotlib.patches.Circle([self.eye_spacing, self.eye_height], self.pupil_size)
+        right_pupil = matplotlib.patches.Circle([scaled_features['eye_spacing'], scaled_features['eye_height']], scaled_features['pupil_size'])
         right_pupil.set(color='Black')
-        left_pupil = matplotlib.patches.Circle([-self.eye_spacing, self.eye_height], self.pupil_size)
+        left_pupil = matplotlib.patches.Circle([-scaled_features['eye_spacing'], scaled_features['eye_height']], scaled_features['pupil_size'])
         left_pupil.set(color='Black')
         ax.add_artist(right_pupil)
         ax.add_artist(left_pupil)
 
         # Draw eyebrows
-        eyebrow_opp = math.sin(math.radians(self.eyebrow_angle)) * self.eyebrow_length
-        eyebrow_adj = math.cos(math.radians(self.eyebrow_angle)) * self.eyebrow_length
-        eyebrow_spacing = self.eye_spacing - self.eyebrow_length/2
-        eyebrow_height_adjusted = self.eye_height + self.eyebrow_height + self.eye_width/2 + 0.05
+        eyebrow_opp = math.sin(math.radians(scaled_features['eyebrow_angle'])) * scaled_features['eyebrow_length']
+        eyebrow_adj = math.cos(math.radians(scaled_features['eyebrow_angle'])) * scaled_features['eyebrow_length']
+        eyebrow_spacing = scaled_features['eye_spacing'] - scaled_features['eyebrow_length']/2
+        eyebrow_height_adjusted = scaled_features['eye_height'] + scaled_features['eyebrow_height'] + scaled_features['eye_width']/2 + 0.05
         right_eyebrow = matplotlib.lines.Line2D([eyebrow_spacing, eyebrow_spacing+eyebrow_adj], [eyebrow_height_adjusted, eyebrow_height_adjusted+eyebrow_opp])
         right_eyebrow.set(color='Black')
         left_eyebrow = matplotlib.lines.Line2D([-eyebrow_spacing, -eyebrow_spacing-eyebrow_adj], [eyebrow_height_adjusted, eyebrow_height_adjusted+eyebrow_opp])
@@ -139,7 +119,7 @@ class CFace():
         ax.add_artist(right_eyebrow)
 
         # Draw mouth
-        mouth = matplotlib.patches.Arc([0,self.mouth_height], 1, 1, angle=-90-self.mouth_length/2, theta1=0, theta2=self.mouth_length)
+        mouth = matplotlib.patches.Arc([0,scaled_features['mouth_height']], 1, 1, angle=-90-scaled_features['mouth_length']/2, theta1=0, theta2=scaled_features['mouth_length'])
         mouth.set(edgecolor='Black')
         ax.add_artist(mouth)
 

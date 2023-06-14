@@ -8,21 +8,21 @@ class TestCFace:
 
     def test_sets_default_feature_values(self):
         cface = CFace()
-        assert cface.nose_width == CFace.defaults['nose_width']
-        assert cface.nose_length == CFace.defaults['nose_length']
-        assert cface.head_width == CFace.defaults['head_width']
-        assert cface.head_length == CFace.defaults['head_length']
-        assert cface.eye_width == CFace.defaults['eye_width']
-        assert cface.eye_length == CFace.defaults['eye_length']
-        assert cface.eye_spacing == CFace.defaults['eye_spacing']
-        assert cface.eye_height == CFace.defaults['eye_height']
-        assert cface.eye_angle == CFace.defaults['eye_angle']
-        assert cface.pupil_size == CFace.defaults['pupil_size']
-        assert cface.mouth_length == CFace.defaults['mouth_length']
-        assert cface.mouth_height == CFace.defaults['mouth_height']
-        assert cface.eyebrow_length == CFace.defaults['eyebrow_length']
-        assert cface.eyebrow_angle == CFace.defaults['eyebrow_angle']
-        assert cface.eyebrow_height == CFace.defaults['eyebrow_height']
+        assert cface.features['nose_width'] == CFace.defaults['nose_width']
+        assert cface.features['nose_length'] == CFace.defaults['nose_length']
+        assert cface.features['head_width'] == CFace.defaults['head_width']
+        assert cface.features['head_length'] == CFace.defaults['head_length']
+        assert cface.features['eye_width'] == CFace.defaults['eye_width']
+        assert cface.features['eye_length'] == CFace.defaults['eye_length']
+        assert cface.features['eye_spacing'] == CFace.defaults['eye_spacing']
+        assert cface.features['eye_height'] == CFace.defaults['eye_height']
+        assert cface.features['eye_angle'] == CFace.defaults['eye_angle']
+        assert cface.features['pupil_size'] == CFace.defaults['pupil_size']
+        assert cface.features['mouth_length'] == CFace.defaults['mouth_length']
+        assert cface.features['mouth_height'] == CFace.defaults['mouth_height']
+        assert cface.features['eyebrow_length'] == CFace.defaults['eyebrow_length']
+        assert cface.features['eyebrow_angle'] == CFace.defaults['eyebrow_angle']
+        assert cface.features['eyebrow_height'] == CFace.defaults['eyebrow_height']
 
     def test_assigns_feature_values(self):
         cface = CFace(nose_width=0.01,
@@ -41,21 +41,21 @@ class TestCFace:
                       eyebrow_angle=0.14,
                       eyebrow_height=0.15)
 
-        assert cface.nose_width == 0.01
-        assert cface.nose_length == 0.02
-        assert cface.head_width == 0.03
-        assert cface.head_length == 0.04
-        assert cface.eye_width == 0.05
-        assert cface.eye_length == 0.06
-        assert cface.eye_spacing == 0.07
-        assert cface.eye_height == 0.08
-        assert cface.eye_angle == 0.09
-        assert cface.pupil_size == 0.10
-        assert cface.mouth_length == 0.11
-        assert cface.mouth_height == 0.12
-        assert cface.eyebrow_length == 0.13
-        assert cface.eyebrow_angle == 0.14
-        assert cface.eyebrow_height == 0.15
+        assert cface.features['nose_width'] == 0.01
+        assert cface.features['nose_length'] == 0.02
+        assert cface.features['head_width'] == 0.03
+        assert cface.features['head_length'] == 0.04
+        assert cface.features['eye_width'] == 0.05
+        assert cface.features['eye_length'] == 0.06
+        assert cface.features['eye_spacing'] == 0.07
+        assert cface.features['eye_height'] == 0.08
+        assert cface.features['eye_angle'] == 0.09
+        assert cface.features['pupil_size'] == 0.10
+        assert cface.features['mouth_length'] == 0.11
+        assert cface.features['mouth_height'] == 0.12
+        assert cface.features['eyebrow_length'] == 0.13
+        assert cface.features['eyebrow_angle'] == 0.14
+        assert cface.features['eyebrow_height'] == 0.15
 
             
     def test_rejects_features_too_small(self):
