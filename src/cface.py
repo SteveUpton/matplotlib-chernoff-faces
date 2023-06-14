@@ -54,6 +54,41 @@ class CFace():
         self.eyebrow_angle = eyebrow_angle
         self.eyebrow_height = eyebrow_height
 
+        self._validate_feature_ranges()
+
+    def _validate_feature_ranges(self):
+        if self.nose_width > 1 or self.nose_width < 0:
+            raise ValueError('nose_width must be within the range 0 to 1')
+        if self.nose_length > 1 or self.nose_length < 0:
+            raise ValueError('nose_length must be within the range 0 to 1')
+        if self.head_width > 1 or self.head_width < 0:
+            raise ValueError('head_width must be within the range 0 to 1')
+        if self.head_length > 1 or self.head_length < 0:
+            raise ValueError('head_length must be within the range 0 to 1')
+        if self.eye_length > 1 or self.eye_length < 0:
+            raise ValueError('eye_length must be within the range 0 to 1')
+        if self.eye_width > 1 or self.eye_width < 0:
+            raise ValueError('eye_width must be within the range 0 to 1')
+        if self.eye_spacing > 1 or self.eye_spacing < 0:
+            raise ValueError('eye_spacing must be within the range 0 to 1')
+        if self.eye_height > 1 or self.eye_height < 0:
+            raise ValueError('eye_height must be within the range 0 to 1')
+        if self.eye_angle > 1 or self.eye_angle < 0:
+            raise ValueError('eye_angle must be within the range 0 to 1')
+        if self.pupil_size > 1 or self.pupil_size < 0:
+            raise ValueError('pupil_size must be within the range 0 to 1')
+        if self.mouth_length > 1 or self.mouth_length < 0:
+            raise ValueError('mouth_length must be within the range 0 to 1')
+        if self.mouth_height > 1 or self.mouth_height < 0:
+            raise ValueError('mouth_height must be within the range 0 to 1')
+        if self.eyebrow_length > 1 or self.eyebrow_length < 0:
+            raise ValueError('eyebrow_length must be within the range 0 to 1')
+        if self.eyebrow_angle > 1 or self.eyebrow_angle < 0:
+            raise ValueError('eyebrow_angle must be within the range 0 to 1')
+        if self.eyebrow_height > 1 or self.eyebrow_height < 0:
+            raise ValueError('eyebrow_height must be within the range 0 to 1')
+        return
+
 
 def cface(ax=None, row=None):
     if row is None:

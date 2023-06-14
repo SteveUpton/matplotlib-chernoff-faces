@@ -92,3 +92,41 @@ class TestCFace:
         assert cface.eyebrow_length == 0.13
         assert cface.eyebrow_angle == 0.14
         assert cface.eyebrow_height == 0.15
+
+            
+    def test_rejects_features_too_small(self):
+        with pytest.raises(ValueError):
+            CFace(nose_width=-0.1,
+                  nose_length=-0.1,
+                  head_width=-0.1,
+                  head_length=-0.1,
+                  eye_width=-0.1,
+                  eye_length=-0.1,
+                  eye_spacing=-0.1,
+                  eye_height=-0.1,
+                  eye_angle=-0.1,
+                  pupil_size=-0.1,
+                  mouth_length=-0.1,
+                  mouth_height=-0.1,
+                  eyebrow_length=-0.1,
+                  eyebrow_angle=-0.1,
+                  eyebrow_height=-0.1)
+
+    def test_rejects_features_too_large(self):
+        with pytest.raises(ValueError):
+            CFace(nose_width=1.1,
+                  nose_length=1.1,
+                  head_width=1.1,
+                  head_length=1.1,
+                  eye_width=1.1,
+                  eye_length=1.1,
+                  eye_spacing=1.1,
+                  eye_height=1.1,
+                  eye_angle=1.1,
+                  pupil_size=1.1,
+                  mouth_length=1.1,
+                  mouth_height=1.1,
+                  eyebrow_length=1.1,
+                  eyebrow_angle=1.1,
+                  eyebrow_height=1.1)
+
