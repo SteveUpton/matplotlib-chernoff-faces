@@ -21,6 +21,69 @@ class CFace():
         'eyebrow_height': 0.5
     }
 
+    feature_ranges = {
+        'nose_width': {
+            'min': 0.01,
+            'max': 0.1
+        },
+        'nose_length': {
+            'min': 0,
+            'max': 1
+        },
+        'head_width': {
+            'min': 0,
+            'max': 1
+        },
+        'head_length': {
+            'min': 0,
+            'max': 1
+        },
+        'eye_width': {
+            'min': 0,
+            'max': 1
+        },
+        'eye_length': {
+            'min': 0,
+            'max': 1
+        },
+        'eye_spacing': {
+            'min': 0,
+            'max': 1
+        },
+        'eye_height': {
+            'min': 0,
+            'max': 1
+        },
+        'eye_angle': {
+            'min': 0,
+            'max': 1
+        },
+        'pupil_size': {
+            'min': 0,
+            'max': 1
+        },
+        'mouth_length': {
+            'min': 0,
+            'max': 1
+        },
+        'mouth_height': {
+            'min': 0,
+            'max': 1
+        },
+        'eyebrow_length': {
+            'min': 0,
+            'max': 1
+        },
+        'eyebrow_angle': {
+            'min': 0,
+            'max': 1
+        },
+        'eyebrow_height': {
+            'min': 0,
+            'max': 1
+        }
+    }
+
     def __init__(self,
                  nose_width=defaults['nose_width'],
                  nose_length=defaults['nose_length'],
@@ -64,12 +127,14 @@ class CFace():
                 raise ValueError('{} value {} must be within the range 0 to 1'.format(feature, value))
         return
     
+    def _scale_feature(value, min, max):
+        old_min = 0
+        old_range = 1
+        new_range = (max - min)
+        return (((value - old_min) * new_range) / old_range) + min
+    
     def plot(self, axes=None, name=None):
         ax = axes
-
-        scaled_features = self.features
-        for feature, value in self.features.items():
-            scaled_features[feature] = value
 
         # Set axes limits to support absolute drawing
         ax.set_xlim([-1, 1])
@@ -79,6 +144,12 @@ class CFace():
         ax.set_xticks([])
         ax.set_yticks([])
         ax.set_title(name, loc='left', x=0.02, y=0.02)
+
+        scaled_features = self.features
+        for feature, value in self.features.items():
+            scaled_features[feature] = CFace._scale_feature(value,
+                                                            min=self.feature_ranges[feature]['min'],
+                                                            max=self.feature_ranges[feature]['max'])
 
         # Draw nose
         nose = matplotlib.patches.Ellipse([0,0], scaled_features['nose_width'], scaled_features['nose_length'])
