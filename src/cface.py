@@ -1,6 +1,60 @@
 import matplotlib
 import math
 
+class CFace():
+
+    defaults = {
+        'nose_width': 0.5,
+        'nose_length': 0.5,
+        'head_width': 0.5,
+        'head_length': 0.5,
+        'eye_width': 0.5,
+        'eye_length': 0.5,
+        'eye_spacing': 0.5,
+        'eye_height': 0.5,
+        'eye_angle': 0.5,
+        'pupil_size': 0.5,
+        'mouth_length': 0.5,
+        'mouth_height': 0.5,
+        'eyebrow_length': 0.5,
+        'eyebrow_angle': 0.5,
+        'eyebrow_height': 0.5
+    }
+
+    def __init__(self,
+                 nose_width=defaults['nose_width'],
+                 nose_length=defaults['nose_length'],
+                 head_width=defaults['head_width'],
+                 head_length=defaults['head_length'],
+                 eye_length=defaults['eye_length'],
+                 eye_width=defaults['eye_width'],
+                 eye_spacing=defaults['eye_spacing'],
+                 eye_height=defaults['eye_height'],
+                 eye_angle=defaults['eye_angle'],
+                 pupil_size=defaults['pupil_size'],
+                 mouth_length=defaults['mouth_length'],
+                 mouth_height=defaults['mouth_height'],
+                 eyebrow_length=defaults['eyebrow_length'],
+                 eyebrow_angle=defaults['eyebrow_angle'],
+                 eyebrow_height=defaults['eyebrow_height']):
+
+        self.nose_width = nose_width
+        self.nose_length = nose_length
+        self.head_width = head_width
+        self.head_length = head_length
+        self.eye_length = eye_length
+        self.eye_width = eye_width
+        self.eye_spacing = eye_spacing
+        self.eye_height = eye_height
+        self.eye_angle = eye_angle
+        self.pupil_size = pupil_size
+        self.mouth_length = mouth_length
+        self.mouth_height = mouth_height
+        self.eyebrow_length = eyebrow_length
+        self.eyebrow_angle = eyebrow_angle
+        self.eyebrow_height = eyebrow_height
+
+
 def cface(ax=None, row=None):
     if row is None:
         raise TypeError("Must supply row")
