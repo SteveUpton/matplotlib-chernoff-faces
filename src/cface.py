@@ -47,8 +47,8 @@ class CFace():
             'max': 0.35
         },
         'eye_spacing': {
-            'min': 0.10,
-            'max': 0.30
+            'min': 0.05,
+            'max': 0.35
         },
         'eye_height': {
             'min': 0.1,
