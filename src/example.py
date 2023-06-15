@@ -3,8 +3,6 @@ import pandas as pd
 
 from cface import CFace
 
-fig, axes = plt.subplots()
-
 cface_default = CFace()
 
 cface_max = CFace(nose_width = 1,
@@ -55,6 +53,14 @@ cface_experiments = CFace(nose_width = 0,
                           eyebrow_angle = 0,
                           eyebrow_height = 0)
 
-ax = cface_max.plot(axes)
+df = pd.DataFrame([cface_min, cface_default, cface_max, cface_experiments],
+                  columns=['cface'],
+                  index=['min', 'default', 'max', 'experiments'])
 
+fig, axes = plt.subplots(1, 4)
+
+for i in range(len(df)):
+    df.iloc[i, df.columns.get_loc("cface")].plot(axes[i], df.iloc[i].name)
+
+fig.subplots_adjust(hspace=0, wspace=0)
 plt.show()
