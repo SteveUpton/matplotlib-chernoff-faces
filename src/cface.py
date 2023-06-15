@@ -152,7 +152,7 @@ class CFace():
                                                             max=self.feature_ranges[feature]['max'])
 
         # Draw nose
-        nose = matplotlib.patches.Ellipse([0,0], scaled_features['nose_width'], scaled_features['nose_length'])
+        nose = matplotlib.patches.Ellipse([0,0+scaled_features['nose_length']/4], scaled_features['nose_width'], scaled_features['nose_length'])
         nose.set(edgecolor='Black', fill=False)
         ax.add_artist(nose)
 
