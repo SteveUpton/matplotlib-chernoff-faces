@@ -152,12 +152,17 @@ class TestNormaliseDF:
 
     @pytest.mark.usefixtures('df_simple')
     def test_returns_dataframe(self, df_simple):
-        prepped_df = CFace.normalise_df(df_simple)
+        prepped_df, feature_map = CFace.normalise_df(df_simple)
         assert type(prepped_df) is pd.core.frame.DataFrame
 
     @pytest.mark.usefixtures('df_simple')
     def test_all_values_in_range_0_1(self, df_simple):
-        prepped_df = CFace.normalise_df(df_simple)
+        prepped_df, feature_map = CFace.normalise_df(df_simple)
         for column in prepped_df:
             assert prepped_df[column].min() >= 0
             assert prepped_df[column].max() <= 1
+
+    @pytest.mark.usefixtures('df_simple')
+    def test_returns_feature_map_with_all_keys(self, df_simple):
+        prepped_df, feature_map = CFace.normalise_df(df_simple)
+        assert list(feature_map.values()) == prepped_df.columns.values.tolist()

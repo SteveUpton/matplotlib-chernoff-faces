@@ -201,6 +201,9 @@ class CFace():
     def normalise_df(df):
         normalised_df = df
 
+        feature_list = list(reversed(CFace.feature_ranges.keys()))
+        feature_map = {}
+
         for column_name in normalised_df:
             column = normalised_df[column_name]
             if not is_numeric_dtype(column):
@@ -218,7 +221,8 @@ class CFace():
 
             normalised_df[column_name] = column.apply(lambda x: scale(x, old_min, old_range))
 
-        return normalised_df
+            if feature_list:
+                feature_map[feature_list.pop()] = column_name
 
-    def prep_dataframe(df):
-        return df
+        return normalised_df, feature_map
+
