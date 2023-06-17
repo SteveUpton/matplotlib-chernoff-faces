@@ -143,4 +143,21 @@ class TestScaleFeature:
     def test_scales_to_min_of_range(self):
         scaled_feature = CFace._scale_feature(0, min=0, max=1)
         assert scaled_feature ==  0
-    
+
+class TestNormaliseDF:
+
+    @pytest.fixture
+    def df_simple(self):
+        return pd.DataFrame([[1, 2], [1, 1]], columns=['A', 'B'])
+
+    @pytest.mark.usefixtures('df_simple')
+    def test_returns_dataframe(self, df_simple):
+        prepped_df = CFace.normalise_df(df_simple)
+        assert type(prepped_df) is pd.core.frame.DataFrame
+
+    @pytest.mark.usefixtures('df_simple')
+    def test_all_values_in_range_0_1(self, df_simple):
+        prepped_df = CFace.normalise_df(df_simple)
+        for column in prepped_df:
+            assert prepped_df[column].min() >= 0
+            assert prepped_df[column].max() <= 1

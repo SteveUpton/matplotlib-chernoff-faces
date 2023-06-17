@@ -1,5 +1,6 @@
 import matplotlib
 import math
+from pandas.api.types import is_numeric_dtype
 
 class CFace():
 
@@ -68,7 +69,7 @@ class CFace():
         },
         'mouth_height': {
             'min': 0.01,
-            'max': 0.1
+            'max': 0.2
         },
         'eyebrow_length': {
             'min': 0.10,
@@ -197,5 +198,27 @@ class CFace():
 
         return(ax)
 
-def prep_dataframe(df):
-    return df
+    def normalise_df(df):
+        normalised_df = df
+
+        for column_name in normalised_df:
+            column = normalised_df[column_name]
+            if not is_numeric_dtype(column):
+                continue
+
+            old_max = column.max()
+            old_min = column.min()
+            old_range = old_max - old_min
+
+            def scale(value, old_min, old_range):
+                if old_range == 0:
+                    return 1
+                else:
+                    return (((value - old_min)) / old_range)
+
+            normalised_df[column_name] = column.apply(lambda x: scale(x, old_min, old_range))
+
+        return normalised_df
+
+    def prep_dataframe(df):
+        return df
