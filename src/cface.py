@@ -14,7 +14,7 @@ class CFace():
         'eye_spacing': 0.5,
         'eye_height': 0.5,
         'eye_angle': 0.5,
-        'pupil_size': 0.5,
+        'pupil_size': 0.2,
         'mouth_length': 0.5,
         'mouth_height': 0.5,
         'eyebrow_length': 0.5,
@@ -226,3 +226,26 @@ class CFace():
 
         return normalised_df, feature_map
 
+    def create_cface_from_row(row, feature_map):
+
+        def get_feature(row, feature_name):
+            if not feature_name in feature_map:
+                return 0.5
+            else:
+                return row[feature_map[feature_name]]
+
+        return CFace(nose_width = get_feature(row, 'nose_width'),
+                     nose_length = get_feature(row, 'nose_length'),
+                     head_width = get_feature(row, 'head_width'),
+                     head_length = get_feature(row, 'head_length'),
+                     eye_width = get_feature(row, 'eye_width'),
+                     eye_length = get_feature(row, 'eye_length'),
+                     eye_spacing = get_feature(row, 'eye_spacing'),
+                     eye_height = get_feature(row, 'eye_height'),
+                     eye_angle = get_feature(row, 'eye_angle'),
+                     pupil_size = get_feature(row, 'pupil_size'),
+                     mouth_length = get_feature(row, 'mouth_length'),
+                     mouth_height = get_feature(row, 'mouth_height'),
+                     eyebrow_length = get_feature(row, 'eyebrow_length'),
+                     eyebrow_angle = get_feature(row, 'eyebrow_angle'),
+                     eyebrow_height = get_feature(row, 'eyebrow_height'))

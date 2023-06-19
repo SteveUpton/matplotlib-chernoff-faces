@@ -166,3 +166,9 @@ class TestNormaliseDF:
     def test_returns_feature_map_with_all_keys(self, df_simple):
         prepped_df, feature_map = CFace.normalise_df(df_simple)
         assert list(feature_map.values()) == prepped_df.columns.values.tolist()
+
+class TestCreateCfaceFromRow:
+    
+    def test_returns_cface(self):
+        cface = CFace.create_cface_from_row({}, {})
+        assert type(cface) is CFace
