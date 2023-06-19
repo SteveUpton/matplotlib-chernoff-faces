@@ -46,7 +46,7 @@ class CFace():
             'default': 0.5
         },
         'eye_angle': {
-            'min': 0.00,
+            'min': 70.00,
             'max': 110,
             'default': 0.5
         },
@@ -71,8 +71,8 @@ class CFace():
             'default': 0.5
         },
         'eyebrow_angle': {
-            'min': 0.00,
-            'max': 45.0,
+            'min': -20.00,
+            'max': 20.0,
             'default': 0.5
         },
         'eyebrow_height': {
