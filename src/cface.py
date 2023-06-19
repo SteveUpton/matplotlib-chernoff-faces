@@ -4,103 +4,100 @@ from pandas.api.types import is_numeric_dtype
 
 class CFace():
 
-    defaults = {
-        'nose_width': 0.5,
-        'nose_length': 0.5,
-        'head_width': 0.5,
-        'head_length': 0.5,
-        'eye_width': 0.5,
-        'eye_length': 0.5,
-        'eye_spacing': 0.5,
-        'eye_height': 0.5,
-        'eye_angle': 0.5,
-        'pupil_size': 0.2,
-        'mouth_length': 0.5,
-        'mouth_height': 0.5,
-        'eyebrow_length': 0.5,
-        'eyebrow_angle': 0.5,
-        'eyebrow_height': 0.5
-    }
-
     feature_ranges = {
         'nose_width': {
             'min': 0.01,
-            'max': 0.10
+            'max': 0.10,
+            'default': 0.5
         },
         'nose_length': {
             'min': 0.10,
-            'max': 0.50
+            'max': 0.50,
+            'default': 0.5
         },
         'head_width': {
             'min': 0.80,
-            'max': 2
+            'max': 2,
+            'default': 0.5
         },
         'head_length': {
             'min': 0.80,
-            'max': 2
+            'max': 2,
+            'default': 0.5
         },
         'eye_width': {
             'min': 0.10,
-            'max': 0.30
+            'max': 0.30,
+            'default': 0.5
         },
         'eye_length': {
             'min': 0.10,
-            'max': 0.35
+            'max': 0.35,
+            'default': 0.5
         },
         'eye_spacing': {
             'min': 0.05,
-            'max': 0.35
+            'max': 0.35,
+            'default': 0.5
         },
         'eye_height': {
             'min': 0.1,
-            'max': 0.3
+            'max': 0.3,
+            'default': 0.5
         },
         'eye_angle': {
             'min': 0.00,
-            'max': 110
+            'max': 110,
+            'default': 0.5
         },
         'pupil_size': {
             'min': 0.01,
-            'max': 0.07
+            'max': 0.07,
+            'default': 0.2
         },
         'mouth_length': {
             'min': 5,
-            'max': 90
+            'max': 90,
+            'default': 0.5
         },
         'mouth_height': {
             'min': 0.01,
-            'max': 0.2
+            'max': 0.2,
+            'default': 0.5
         },
         'eyebrow_length': {
             'min': 0.10,
-            'max': 0.30
+            'max': 0.30,
+            'default': 0.5
         },
         'eyebrow_angle': {
             'min': 0.00,
-            'max': 45.0
+            'max': 45.0,
+            'default': 0.5
         },
         'eyebrow_height': {
             'min': 0.00,
-            'max': 0.15
+            'max': 0.15,
+            'default': 0.5
         }
     }
 
     def __init__(self,
-                 nose_width=defaults['nose_width'],
-                 nose_length=defaults['nose_length'],
-                 head_width=defaults['head_width'],
-                 head_length=defaults['head_length'],
-                 eye_length=defaults['eye_length'],
-                 eye_width=defaults['eye_width'],
-                 eye_spacing=defaults['eye_spacing'],
-                 eye_height=defaults['eye_height'],
-                 eye_angle=defaults['eye_angle'],
-                 pupil_size=defaults['pupil_size'],
-                 mouth_length=defaults['mouth_length'],
-                 mouth_height=defaults['mouth_height'],
-                 eyebrow_length=defaults['eyebrow_length'],
-                 eyebrow_angle=defaults['eyebrow_angle'],
-                 eyebrow_height=defaults['eyebrow_height']):
+                 nose_width=feature_ranges['nose_width']['default'],
+                 nose_length=feature_ranges['nose_length']['default'],
+                 head_width=feature_ranges['head_width']['default'],
+                 head_length=feature_ranges['head_length']['default'],
+                 eye_length=feature_ranges['eye_length']['default'],
+                 eye_width=feature_ranges['eye_width']['default'],
+                 eye_spacing=feature_ranges['eye_spacing']['default'],
+                 eye_height=feature_ranges['eye_height']['default'],
+                 eye_angle=feature_ranges['eye_angle']['default'],
+                 pupil_size=feature_ranges['pupil_size']['default'],
+                 mouth_length=feature_ranges['mouth_length']['default'],
+                 mouth_height=feature_ranges['mouth_height']['default'],
+                 eyebrow_length=feature_ranges['eyebrow_length']['default'],
+                 eyebrow_angle=feature_ranges['eyebrow_angle']['default'],
+                 eyebrow_height=feature_ranges['eyebrow_height']['default']):
 
         self.features = {
             'nose_width': nose_width,
