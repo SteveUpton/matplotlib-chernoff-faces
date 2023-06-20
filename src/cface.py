@@ -227,7 +227,7 @@ class CFace():
 
         def get_feature(row, feature_name):
             if not feature_name in feature_map:
-                return 0.5
+                return CFace.feature_ranges[feature_name]['default']
             else:
                 return row[feature_map[feature_name]]
 
