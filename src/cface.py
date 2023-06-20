@@ -62,7 +62,7 @@ class CFace():
         },
         'mouth_height': {
             'min': 0.01,
-            'max': 0.2,
+            'max': 0.5,
             'default': 0.5
         },
         'eyebrow_length': {
@@ -188,8 +188,8 @@ class CFace():
         ax.add_artist(right_eyebrow)
 
         # Draw mouth
-        mouth_distance_from_center = -scaled_features['mouth_height']+scaled_features['head_length']/4
-        mouth = matplotlib.patches.Arc([0,mouth_distance_from_center], 1, 1, angle=-90-scaled_features['mouth_length']/2, theta1=0, theta2=scaled_features['mouth_length'])
+        mouth_distance_from_center = min((scaled_features['mouth_height']), (scaled_features['head_length']/2 - scaled_features['head_length']/6))
+        mouth = matplotlib.patches.Arc([0,-mouth_distance_from_center], scaled_features['head_length']/3, scaled_features['head_length']/3, angle=-90-scaled_features['mouth_length']/2, theta1=0, theta2=scaled_features['mouth_length'])
         mouth.set(edgecolor='Black')
         ax.add_artist(mouth)
 
