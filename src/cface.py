@@ -1,5 +1,5 @@
-import matplotlib
 import math
+import matplotlib
 from pandas.api.types import is_numeric_dtype
 
 class CFace():
@@ -56,8 +56,8 @@ class CFace():
             'default': 0.2
         },
         'mouth_length': {
-            'min': 5,
-            'max': 90,
+            'min': 10,
+            'max': 100,
             'default': 0.5
         },
         'mouth_height': {
@@ -128,9 +128,9 @@ class CFace():
     def _scale_feature(value, min, max):
         old_min = 0
         old_range = 1
-        new_range = (max - min)
+        new_range = max - min
         return (((value - old_min) * new_range) / old_range) + min
-    
+
     def plot(self, axes=None, name=None):
         ax = axes
 
@@ -189,11 +189,11 @@ class CFace():
 
         # Draw mouth
         mouth_distance_from_center = min((scaled_features['mouth_height']), (scaled_features['head_length']/2 - scaled_features['head_length']/6))
-        mouth = matplotlib.patches.Arc([0,-mouth_distance_from_center], scaled_features['head_length']/3, scaled_features['head_length']/3, angle=-90-scaled_features['mouth_length']/2, theta1=0, theta2=scaled_features['mouth_length'])
+        mouth = matplotlib.patches.Arc([0,-mouth_distance_from_center+0.01], scaled_features['head_length']/3, scaled_features['head_length']/3, angle=-90-scaled_features['mouth_length']/2, theta1=0, theta2=scaled_features['mouth_length'])
         mouth.set(edgecolor='Black')
         ax.add_artist(mouth)
 
-        return(ax)
+        return ax
 
     def normalise_df(df):
         normalised_df = df
