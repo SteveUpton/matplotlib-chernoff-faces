@@ -129,6 +129,16 @@ class CFace():
         return (((value - old_min) * new_range) / old_range) + min
 
     def plot(self, axes=None, name=None):
+        '''
+        Plots the Chernoff Face on the supplied axes, with a label set to the supplied name. 
+
+        Parameters:
+            axes (axes): The axes on which to plot the face.
+            name (str): The label to add to the face.
+
+        Returns:
+            ax (axes): The axes containing the plotted face.
+        '''
         ax = axes
 
         # Set axes limits to support absolute drawing
@@ -249,6 +259,18 @@ class CFace():
 
     @staticmethod
     def create_cface_from_row(row, feature_map):
+        '''
+        Creates a Chernoff Face based on a (normalised) dataframe row and a feature map defining
+        the mapping between features (of the Chernoff Face) and columns (of the supplied dataframe).         
+
+        Parameters:
+            row (pandas.Series): A normalised row.
+            feature_map (dict): A mapping between features and column names.
+
+        Returns:
+            `CFace`: The Chernoff Face
+        '''
+
         return CFace(nose_width = CFace._get_feature_from_row(row, 'nose_width', feature_map),
                      nose_length = CFace._get_feature_from_row(row, 'nose_length', feature_map),
                      head_width = CFace._get_feature_from_row(row, 'head_width', feature_map),
