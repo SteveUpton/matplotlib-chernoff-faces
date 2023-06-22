@@ -117,14 +117,10 @@ class CFace():
             'eyebrow_height': eyebrow_height
         }
 
-        self._validate_feature_ranges()
-
-    def _validate_feature_ranges(self):
         for feature, value in self.features.items():
             if value > 1 or value < 0:
-                raise ValueError('{} value {} must be within the range 0 to 1'.format(feature, value))
-        return
-    
+                raise ValueError(f'{feature} value {value} must be within the range 0 to 1')
+
     @staticmethod
     def _scale_feature(value, min, max):
         old_min = 0
@@ -151,27 +147,39 @@ class CFace():
                                                             max=self.feature_ranges[feature]['max'])
 
         # Draw nose
-        nose = matplotlib.patches.Ellipse([0,0+scaled_features['nose_length']/4], scaled_features['nose_width'], scaled_features['nose_length'])
+        nose = matplotlib.patches.Ellipse(xy=[0,0+scaled_features['nose_length']/4],
+                                          width=scaled_features['nose_width'],
+                                          height=scaled_features['nose_length'])
         nose.set(edgecolor='Black', fill=False)
         ax.add_artist(nose)
 
         # Draw head
-        head = matplotlib.patches.Ellipse([0,0], scaled_features['head_width'], scaled_features['head_length'])
+        head = matplotlib.patches.Ellipse(xy=[0,0],
+                                          width=scaled_features['head_width'],
+                                          height=scaled_features['head_length'])
         head.set(edgecolor='Black', fill=False)
         ax.add_artist(head)
 
         # Draw eyes
-        right_eye = matplotlib.patches.Ellipse([scaled_features['eye_spacing'], scaled_features['eye_height']], scaled_features['eye_width'], scaled_features['eye_length'], angle=scaled_features['eye_angle'])
+        right_eye = matplotlib.patches.Ellipse(xy=[scaled_features['eye_spacing'], scaled_features['eye_height']],
+                                               width=scaled_features['eye_width'],
+                                               height=scaled_features['eye_length'],
+                                               angle=scaled_features['eye_angle'])
         right_eye.set(edgecolor='Black', fill=False)
-        left_eye = matplotlib.patches.Ellipse([-scaled_features['eye_spacing'], scaled_features['eye_height']], scaled_features['eye_width'], scaled_features['eye_length'], angle=-scaled_features['eye_angle'])
+        left_eye = matplotlib.patches.Ellipse(xy=[-scaled_features['eye_spacing'], scaled_features['eye_height']],
+                                              width=scaled_features['eye_width'],
+                                              height=scaled_features['eye_length'],
+                                              angle=-scaled_features['eye_angle'])
         left_eye.set(edgecolor='Black', fill=False)
         ax.add_artist(right_eye)
         ax.add_artist(left_eye)
 
         # Draw pupils
-        right_pupil = matplotlib.patches.Circle([scaled_features['eye_spacing'], scaled_features['eye_height']], scaled_features['pupil_size'])
+        right_pupil = matplotlib.patches.Circle(xy=[scaled_features['eye_spacing'], scaled_features['eye_height']],
+                                                radius=scaled_features['pupil_size'])
         right_pupil.set(color='Black')
-        left_pupil = matplotlib.patches.Circle([-scaled_features['eye_spacing'], scaled_features['eye_height']], scaled_features['pupil_size'])
+        left_pupil = matplotlib.patches.Circle(xy=[-scaled_features['eye_spacing'], scaled_features['eye_height']],
+                                               radius=scaled_features['pupil_size'])
         left_pupil.set(color='Black')
         ax.add_artist(right_pupil)
         ax.add_artist(left_pupil)
@@ -181,16 +189,24 @@ class CFace():
         eyebrow_adj = math.cos(math.radians(scaled_features['eyebrow_angle'])) * scaled_features['eyebrow_length']
         eyebrow_spacing = scaled_features['eye_spacing'] - scaled_features['eyebrow_length']/2
         eyebrow_height_adjusted = scaled_features['eye_height'] + scaled_features['eyebrow_height'] + scaled_features['eye_width']/2 + 0.05
-        right_eyebrow = matplotlib.lines.Line2D([eyebrow_spacing, eyebrow_spacing+eyebrow_adj], [eyebrow_height_adjusted, eyebrow_height_adjusted+eyebrow_opp])
+        right_eyebrow = matplotlib.lines.Line2D(xdata=[eyebrow_spacing, eyebrow_spacing+eyebrow_adj],
+                                                ydata=[eyebrow_height_adjusted, eyebrow_height_adjusted+eyebrow_opp])
         right_eyebrow.set(color='Black')
-        left_eyebrow = matplotlib.lines.Line2D([-eyebrow_spacing, -eyebrow_spacing-eyebrow_adj], [eyebrow_height_adjusted, eyebrow_height_adjusted+eyebrow_opp])
+        left_eyebrow = matplotlib.lines.Line2D(xdata=[-eyebrow_spacing, -eyebrow_spacing-eyebrow_adj],
+                                               ydata=[eyebrow_height_adjusted, eyebrow_height_adjusted+eyebrow_opp])
         left_eyebrow.set(color='Black')
         ax.add_artist(left_eyebrow)
         ax.add_artist(right_eyebrow)
 
         # Draw mouth
-        mouth_distance_from_center = min((scaled_features['mouth_height']), (scaled_features['head_length']/2 - scaled_features['head_length']/6))
-        mouth = matplotlib.patches.Arc([0,-mouth_distance_from_center+0.01], scaled_features['head_length']/3, scaled_features['head_length']/3, angle=-90-scaled_features['mouth_length']/2, theta1=0, theta2=scaled_features['mouth_length'])
+        mouth_distance_from_center = min((scaled_features['mouth_height']),
+                                         (scaled_features['head_length']/2 - scaled_features['head_length']/6))
+        mouth = matplotlib.patches.Arc(xy=[0,-mouth_distance_from_center+0.01],
+                                       width=scaled_features['head_length']/3,
+                                       height=scaled_features['head_length']/3,
+                                       angle=-90-scaled_features['mouth_length']/2,
+                                       theta1=0,
+                                       theta2=scaled_features['mouth_length'])
         mouth.set(edgecolor='Black')
         ax.add_artist(mouth)
 
@@ -200,7 +216,7 @@ class CFace():
     def _normalise_value(value, old_min, old_range):
         if old_range == 0:
             return 1
-        return ((value - old_min) / old_range)
+        return (value - old_min) / old_range
 
     @staticmethod
     def normalise_df(df):
@@ -226,26 +242,25 @@ class CFace():
         return normalised_df, feature_map
 
     @staticmethod
+    def _get_feature_from_row(row, feature_name, feature_map):
+        if not feature_name in feature_map:
+            return CFace.feature_ranges[feature_name]['default']
+        return row[feature_map[feature_name]]
+
+    @staticmethod
     def create_cface_from_row(row, feature_map):
-
-        def get_feature(row, feature_name):
-            if not feature_name in feature_map:
-                return CFace.feature_ranges[feature_name]['default']
-            else:
-                return row[feature_map[feature_name]]
-
-        return CFace(nose_width = get_feature(row, 'nose_width'),
-                     nose_length = get_feature(row, 'nose_length'),
-                     head_width = get_feature(row, 'head_width'),
-                     head_length = get_feature(row, 'head_length'),
-                     eye_width = get_feature(row, 'eye_width'),
-                     eye_length = get_feature(row, 'eye_length'),
-                     eye_spacing = get_feature(row, 'eye_spacing'),
-                     eye_height = get_feature(row, 'eye_height'),
-                     eye_angle = get_feature(row, 'eye_angle'),
-                     pupil_size = get_feature(row, 'pupil_size'),
-                     mouth_length = get_feature(row, 'mouth_length'),
-                     mouth_height = get_feature(row, 'mouth_height'),
-                     eyebrow_length = get_feature(row, 'eyebrow_length'),
-                     eyebrow_angle = get_feature(row, 'eyebrow_angle'),
-                     eyebrow_height = get_feature(row, 'eyebrow_height'))
+        return CFace(nose_width = CFace._get_feature_from_row(row, 'nose_width', feature_map),
+                     nose_length = CFace._get_feature_from_row(row, 'nose_length', feature_map),
+                     head_width = CFace._get_feature_from_row(row, 'head_width', feature_map),
+                     head_length = CFace._get_feature_from_row(row, 'head_length', feature_map),
+                     eye_width = CFace._get_feature_from_row(row, 'eye_width', feature_map),
+                     eye_length = CFace._get_feature_from_row(row, 'eye_length', feature_map),
+                     eye_spacing = CFace._get_feature_from_row(row, 'eye_spacing', feature_map),
+                     eye_height = CFace._get_feature_from_row(row, 'eye_height', feature_map),
+                     eye_angle = CFace._get_feature_from_row(row, 'eye_angle', feature_map),
+                     pupil_size = CFace._get_feature_from_row(row, 'pupil_size', feature_map),
+                     mouth_length = CFace._get_feature_from_row(row, 'mouth_length', feature_map),
+                     mouth_height = CFace._get_feature_from_row(row, 'mouth_height', feature_map),
+                     eyebrow_length = CFace._get_feature_from_row(row, 'eyebrow_length', feature_map),
+                     eyebrow_angle = CFace._get_feature_from_row(row, 'eyebrow_angle', feature_map),
+                     eyebrow_height = CFace._get_feature_from_row(row, 'eyebrow_height', feature_map))
