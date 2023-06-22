@@ -125,6 +125,7 @@ class CFace():
                 raise ValueError('{} value {} must be within the range 0 to 1'.format(feature, value))
         return
     
+    @staticmethod
     def _scale_feature(value, min, max):
         old_min = 0
         old_range = 1
@@ -195,6 +196,13 @@ class CFace():
 
         return ax
 
+    @staticmethod
+    def _normalise_value(value, old_min, old_range):
+        if old_range == 0:
+            return 1
+        return ((value - old_min) / old_range)
+
+    @staticmethod
     def normalise_df(df):
         normalised_df = df
 
@@ -210,19 +218,14 @@ class CFace():
             old_min = column.min()
             old_range = old_max - old_min
 
-            def scale(value, old_min, old_range):
-                if old_range == 0:
-                    return 1
-                else:
-                    return (((value - old_min)) / old_range)
-
-            normalised_df[column_name] = column.apply(lambda x: scale(x, old_min, old_range))
+            normalised_df[column_name] = column.apply(lambda x: CFace._normalise_value(x, old_min, old_range))
 
             if feature_list:
                 feature_map[feature_list.pop()] = column_name
 
         return normalised_df, feature_map
 
+    @staticmethod
     def create_cface_from_row(row, feature_map):
 
         def get_feature(row, feature_name):
