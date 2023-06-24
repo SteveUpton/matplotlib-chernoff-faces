@@ -36,20 +36,20 @@ You can also create a Chernoff Face directly
 
     # Create a Chernoff Face, specifying which features (range: 0-1) you want to change
     cface = CFace(nose_width = 1,
-                nose_length = 1,
-                head_width = 1,
-                head_length = 1,
-                eye_width = 1,
-                eye_length = 1,
-                eye_spacing = 1,
-                eye_height = 1,
-                eye_angle = 1,
-                pupil_size = 1,
-                mouth_length = 1,
-                mouth_height = 1,
-                eyebrow_length = 1,
-                eyebrow_angle = 1,
-                eyebrow_height = 1)
+                  nose_length = 1,
+                  head_width = 1,
+                  head_length = 1,
+                  eye_width = 1,
+                  eye_length = 1,
+                  eye_spacing = 1,
+                  eye_height = 1,
+                  eye_angle = 1,
+                  pupil_size = 1,
+                  mouth_length = 1,
+                  mouth_height = 1,
+                  eyebrow_length = 1,
+                  eyebrow_angle = 1,
+                  eyebrow_height = 1)
 
     fig, axes = plt.subplots()
     ax = cface.plot(axes)
@@ -65,6 +65,33 @@ import matplotlib
 from pandas.api.types import is_numeric_dtype
 
 class CFace():
+    '''
+    A Chernoff Face with instance methods for plotting the face to a supplied `Axes`. Static
+    helper methods allow for the normalisation of a `pandas.DataFrame` to prepare it for use in Chernoff
+    Face creation, and the creation of a Chernoff Face when supplied with a row from a normalised DataFrame.
+
+    The features of the Chernoff Face are stored in an instance variable `features`, a dict with the
+    following keys:  
+    nose_width : The width of the nose.
+    nose_length : The length of the nose.
+    head_width : The width of the head.
+    head_length : The length of the head.
+    eye_width : The width of the eyes.
+    eye_length : The length of the eyes.
+    eye_spacing : How distance between the eyes.
+    eye_height : How far above the center of the face the eyes are drawn. 
+    eye_angle : The angle of the eyes.
+    pupil_size : The size of the pupils.
+    mouth_length : The length (width) of the mouth.
+    mouth_height : How far below the center of the face the mouth is drawn.
+    eyebrow_length : The length of the eyebrows.
+    eyebrow_angle : The angle of the eyebrows.
+    eyebrow_height : How high the eyebrows are drawn, relative to the eyes.
+
+    All features are stored as floats and should be in the range 0-1. You can manually adjust the
+    features to values outside this range, but the behaviour is undefined (the face is likely to
+    look weird.)
+    '''
 
     feature_ranges = {
         'nose_width': {
@@ -115,7 +142,7 @@ class CFace():
         'pupil_size': {
             'min': 0.01,
             'max': 0.07,
-            'default': 0.2
+            'default': 0.5
         },
         'mouth_length': {
             'min': 10,
@@ -160,6 +187,40 @@ class CFace():
                  eyebrow_length=feature_ranges['eyebrow_length']['default'],
                  eyebrow_angle=feature_ranges['eyebrow_angle']['default'],
                  eyebrow_height=feature_ranges['eyebrow_height']['default']):
+        '''
+        Parameters:
+            nose_width (float) : default: 0.5, range: (0-1)
+                The width of the nose.
+            nose_length (float) : default: 0.5, range: (0-1)
+                The length of the nose.
+            head_width (float) : default: 0.5, range: (0-1)
+                The width of the head.
+            head_length (float) : default: 0.5, range: (0-1)
+                The length of the head.
+            eye_width (float) : default: 0.5, range: (0-1)
+                The width of the eyes.
+            eye_length (float) : default: 0.5, range: (0-1)
+                The length of the eyes.
+            eye_spacing (float) : default: 0.5, range: (0-1)
+                How distance between the eyes.
+            eye_height (float) : default: 0.5, range: (0-1)
+                How far above the center of the face the eyes are drawn. 
+            eye_angle (float) : default: 0.5, range: (0-1)
+                The angle of the eyes.
+            pupil_size (float) : default: 0.5, range: (0-1)
+                The size of the pupils.
+            mouth_length (float) : default: 0.5, range: (0-1)
+                The length (width) of the mouth.
+            mouth_height (float) : default: 0.5, range: (0-1)
+                How far below the center of the face the mouth is drawn.
+            eyebrow_length (float) : default: 0.5, range: (0-1)
+                The length of the eyebrows.
+            eyebrow_angle (float) : default: 0.5, range: (0-1)
+                The angle of the eyebrows.
+            eyebrow_height (float) : default: 0.5, range: (0-1)
+                How high the eyebrows are drawn, relative to the eyes.
+        '''
+
 
         self.features = {
             'nose_width': nose_width,
@@ -190,7 +251,7 @@ class CFace():
         new_range = max - min
         return (((value - old_min) * new_range) / old_range) + min
 
-    def plot(self, axes=None, name=None):
+    def plot(self, ax=None, name=None):
         '''
         Plots the Chernoff Face on the supplied axes, with a label set to the supplied name. 
 
@@ -201,8 +262,6 @@ class CFace():
         Returns:
             ax (axes): The axes containing the plotted face.
         '''
-        ax = axes
-
         # Set axes limits to support absolute drawing
         ax.set_xlim([-1, 1])
         ax.set_ylim([-1, 1])
@@ -261,7 +320,8 @@ class CFace():
         eyebrow_opp = math.sin(math.radians(scaled_features['eyebrow_angle'])) * scaled_features['eyebrow_length']
         eyebrow_adj = math.cos(math.radians(scaled_features['eyebrow_angle'])) * scaled_features['eyebrow_length']
         eyebrow_spacing = scaled_features['eye_spacing'] - scaled_features['eyebrow_length']/2
-        eyebrow_height_adjusted = scaled_features['eye_height'] + scaled_features['eyebrow_height'] + scaled_features['eye_width']/2 + 0.05
+        eyebrow_height_adjusted = (scaled_features['eye_height'] + scaled_features['eyebrow_height'] +
+                                   scaled_features['eye_width']/2 + 0.05)
         right_eyebrow = matplotlib.lines.Line2D(xdata=[eyebrow_spacing, eyebrow_spacing+eyebrow_adj],
                                                 ydata=[eyebrow_height_adjusted, eyebrow_height_adjusted+eyebrow_opp])
         right_eyebrow.set(color='Black')
@@ -293,6 +353,17 @@ class CFace():
 
     @staticmethod
     def normalise_df(df):
+        '''
+        Takes a `pandas.DataFrame` and returns a normalised copy of that DataFrame. All values are normalised
+        to a range from 0 to 1, maintaining per column scaling.
+
+        Parameters:
+            df (`pandas.DataFrame`): A DataFrame of data to be normalised.
+
+        Returns:
+            df (`pandas.DataFrame`): A normalised DataFrame.
+            feature_map (dict): A mapping between Chernoff Face features and columns in the DataFrame.
+        '''
         normalised_df = df
 
         feature_list = list(reversed(CFace.feature_ranges.keys()))
@@ -300,15 +371,19 @@ class CFace():
 
         for column_name in normalised_df:
             column = normalised_df[column_name]
+
+            # If the column is not numeric, ignore it
             if not is_numeric_dtype(column):
                 continue
 
+            #  Normalise the column, according to the range of the column
             old_max = column.max()
             old_min = column.min()
             old_range = old_max - old_min
 
             normalised_df[column_name] = column.apply(lambda x: CFace._normalise_value(x, old_min, old_range))
 
+            # Map the normalised column to the next available feature
             if feature_list:
                 feature_map[feature_list.pop()] = column_name
 
@@ -333,7 +408,6 @@ class CFace():
         Returns:
             `CFace`: The Chernoff Face
         '''
-
         return CFace(nose_width = CFace._get_feature_from_row(row, 'nose_width', feature_map),
                      nose_length = CFace._get_feature_from_row(row, 'nose_length', feature_map),
                      head_width = CFace._get_feature_from_row(row, 'head_width', feature_map),
