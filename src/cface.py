@@ -246,8 +246,42 @@ class CFace():
     @staticmethod
     def normalise_df(df):
         '''
-        Takes a `pandas.DataFrame` and returns a normalised copy of that DataFrame, with all values
-        normalised to a range from 0 to 1, maintaining per column scaling.
+        Normalises a `pandas.DataFrame` and returns a mapping between Chernoff Face features and
+        and column names in the normalised DataFrame.
+        
+        Takes a `pandas.DataFrame` and returns a copy of that DataFrame, with numeric values
+        normalised to a range from 0 to 1, maintaining per column scaling. Non numeric or mixed type
+        columns will not be normalised or appear in the feature_map.
+
+        Also returns feature_map, a dict with the keys being Chernoff Face features and values being
+        column names in the DataFrame. If there are more features than normalised columns, then feature_map
+        will only contain feature to column name mappings up to the number of columns. If there are more
+        normalised columns than features, then feature_map will only contain mappings to the first
+        columns that were normalised.
+
+        All columns that can be normalised will be normalised, allowing you to edit feature_map to
+        adjust the mappings manually. Multiple features can be mapped to the same column name. A complete
+        feature_map looks like this:
+
+        ```
+        {
+            'nose_width': 'col1',
+            'nose_length': 'col2',
+            'head_width': 'col3',
+            'head_length': 'col4',
+            'eye_width': 'col5',
+            'eye_length': 'col6',
+            'eye_spacing': 'col7',
+            'eye_height': 'col8',
+            'eye_angle': 'col9',
+            'pupil_size': 'col10',
+            'mouth_length': 'col11',
+            'mouth_height': 'col12',
+            'eyebrow_length': 'col13',
+            'eyebrow_angle': 'col14',
+            'eyebrow_height': 'col15'    
+        }
+        ```
 
         Parameters:
             df (`pandas.DataFrame`): A DataFrame of data to be normalised.
@@ -443,6 +477,21 @@ class CFace():
 
     @staticmethod
     def _get_feature_from_row(row, feature_name, feature_map):
+        '''
+        Given a row (`pandas.Series`), extracts the value for `feature_name` from the appropriate column
+        as described by the mapping in `feature_map`.
+
+        If `feature_name` is not present in the `feature_map`, then the default value for that feature
+        is returned.
+
+        Parameters:
+            row (`pandas.Series`): The row from which to extract the feature.
+            feature_name (str): The name of the feature to extract.
+            feature_map (dict): A mapping between Chernoff Face features and columns in the DataFrame.
+
+        Returns:
+            float
+        '''
         if not feature_name in feature_map:
             return CFace.feature_ranges[feature_name]['default']
         return row[feature_map[feature_name]]
