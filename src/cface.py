@@ -221,7 +221,6 @@ class CFace():
                 How high the eyebrows are drawn, relative to the eyes.
         '''
 
-
         self.features = {
             'nose_width': nose_width,
             'nose_length': nose_length,
@@ -245,11 +244,72 @@ class CFace():
                 raise ValueError(f'{feature} value {value} must be within the range 0 to 1')
 
     @staticmethod
-    def _scale_feature(value, min, max):
-        old_min = 0
-        old_range = 1
-        new_range = max - min
-        return (((value - old_min) * new_range) / old_range) + min
+    def normalise_df(df):
+        '''
+        Takes a `pandas.DataFrame` and returns a normalised copy of that DataFrame, with all values
+        normalised to a range from 0 to 1, maintaining per column scaling.
+
+        Parameters:
+            df (`pandas.DataFrame`): A DataFrame of data to be normalised.
+
+        Returns:
+            df (`pandas.DataFrame`): A normalised DataFrame.
+            feature_map (dict): A mapping between Chernoff Face features and columns in the DataFrame.
+        '''
+        normalised_df = df
+
+        feature_list = list(reversed(CFace.feature_ranges.keys()))
+        feature_map = {}
+
+        for column_name in normalised_df:
+            column = normalised_df[column_name]
+
+            # If the column is not numeric, ignore it
+            if not is_numeric_dtype(column):
+                continue
+
+            #  Normalise the column, according to the range of the column
+            old_max = column.max()
+            old_min = column.min()
+            old_range = old_max - old_min
+
+            normalised_df[column_name] = column.apply(lambda x: CFace._normalise_value(x, old_min, old_range))
+
+            # Map the normalised column to the next available feature
+            if feature_list:
+                feature_map[feature_list.pop()] = column_name
+
+        return normalised_df, feature_map
+
+    @staticmethod
+    def create_cface_from_row(row, feature_map):
+        '''
+        Creates a Chernoff Face based on a (normalised) dataframe row and a feature map defining
+        the mapping between features (of the Chernoff Face) and columns (of the supplied dataframe).         
+
+        Parameters:
+            row (pandas.Series): A normalised row.
+            feature_map (dict): A mapping between features and column names.
+
+        Returns:
+            `CFace`: The Chernoff Face
+        '''
+        return CFace(nose_width = CFace._get_feature_from_row(row, 'nose_width', feature_map),
+                     nose_length = CFace._get_feature_from_row(row, 'nose_length', feature_map),
+                     head_width = CFace._get_feature_from_row(row, 'head_width', feature_map),
+                     head_length = CFace._get_feature_from_row(row, 'head_length', feature_map),
+                     eye_width = CFace._get_feature_from_row(row, 'eye_width', feature_map),
+                     eye_length = CFace._get_feature_from_row(row, 'eye_length', feature_map),
+                     eye_spacing = CFace._get_feature_from_row(row, 'eye_spacing', feature_map),
+                     eye_height = CFace._get_feature_from_row(row, 'eye_height', feature_map),
+                     eye_angle = CFace._get_feature_from_row(row, 'eye_angle', feature_map),
+                     pupil_size = CFace._get_feature_from_row(row, 'pupil_size', feature_map),
+                     mouth_length = CFace._get_feature_from_row(row, 'mouth_length', feature_map),
+                     mouth_height = CFace._get_feature_from_row(row, 'mouth_height', feature_map),
+                     eyebrow_length = CFace._get_feature_from_row(row, 'eyebrow_length', feature_map),
+                     eyebrow_angle = CFace._get_feature_from_row(row, 'eyebrow_angle', feature_map),
+                     eyebrow_height = CFace._get_feature_from_row(row, 'eyebrow_height', feature_map))
+
 
     def plot(self, ax=None, name=None):
         '''
@@ -346,80 +406,43 @@ class CFace():
         return ax
 
     @staticmethod
+    def _scale_feature(value, min, max):
+        '''
+        Takes a value in the range 0 to 1 and scales it to the new range, defined by min and max.
+
+        Parameters:
+            value (float): The value to be scaled.
+            min (float): The minimum of the new range.
+            max (float): The maximum of the new range.
+
+        Returns:
+            float
+        '''
+        old_min = 0
+        old_range = 1
+        new_range = max - min
+        return (((value - old_min) * new_range) / old_range) + min
+
+    @staticmethod
     def _normalise_value(value, old_min, old_range):
+        '''
+        Takes a value from a set of values (column) with a specified range and normalises that value to
+        the range 0 to 1, retaining scaling of the value within it's original range.
+
+        Parameters:
+            value (float): The value to be scaled.
+            old_min (float): The minimum of the old range.
+            old_max (float): The maximum of the old range.
+
+        Returns:
+            float
+        '''
         if old_range == 0:
             return 1
         return (value - old_min) / old_range
-
-    @staticmethod
-    def normalise_df(df):
-        '''
-        Takes a `pandas.DataFrame` and returns a normalised copy of that DataFrame. All values are normalised
-        to a range from 0 to 1, maintaining per column scaling.
-
-        Parameters:
-            df (`pandas.DataFrame`): A DataFrame of data to be normalised.
-
-        Returns:
-            df (`pandas.DataFrame`): A normalised DataFrame.
-            feature_map (dict): A mapping between Chernoff Face features and columns in the DataFrame.
-        '''
-        normalised_df = df
-
-        feature_list = list(reversed(CFace.feature_ranges.keys()))
-        feature_map = {}
-
-        for column_name in normalised_df:
-            column = normalised_df[column_name]
-
-            # If the column is not numeric, ignore it
-            if not is_numeric_dtype(column):
-                continue
-
-            #  Normalise the column, according to the range of the column
-            old_max = column.max()
-            old_min = column.min()
-            old_range = old_max - old_min
-
-            normalised_df[column_name] = column.apply(lambda x: CFace._normalise_value(x, old_min, old_range))
-
-            # Map the normalised column to the next available feature
-            if feature_list:
-                feature_map[feature_list.pop()] = column_name
-
-        return normalised_df, feature_map
 
     @staticmethod
     def _get_feature_from_row(row, feature_name, feature_map):
         if not feature_name in feature_map:
             return CFace.feature_ranges[feature_name]['default']
         return row[feature_map[feature_name]]
-
-    @staticmethod
-    def create_cface_from_row(row, feature_map):
-        '''
-        Creates a Chernoff Face based on a (normalised) dataframe row and a feature map defining
-        the mapping between features (of the Chernoff Face) and columns (of the supplied dataframe).         
-
-        Parameters:
-            row (pandas.Series): A normalised row.
-            feature_map (dict): A mapping between features and column names.
-
-        Returns:
-            `CFace`: The Chernoff Face
-        '''
-        return CFace(nose_width = CFace._get_feature_from_row(row, 'nose_width', feature_map),
-                     nose_length = CFace._get_feature_from_row(row, 'nose_length', feature_map),
-                     head_width = CFace._get_feature_from_row(row, 'head_width', feature_map),
-                     head_length = CFace._get_feature_from_row(row, 'head_length', feature_map),
-                     eye_width = CFace._get_feature_from_row(row, 'eye_width', feature_map),
-                     eye_length = CFace._get_feature_from_row(row, 'eye_length', feature_map),
-                     eye_spacing = CFace._get_feature_from_row(row, 'eye_spacing', feature_map),
-                     eye_height = CFace._get_feature_from_row(row, 'eye_height', feature_map),
-                     eye_angle = CFace._get_feature_from_row(row, 'eye_angle', feature_map),
-                     pupil_size = CFace._get_feature_from_row(row, 'pupil_size', feature_map),
-                     mouth_length = CFace._get_feature_from_row(row, 'mouth_length', feature_map),
-                     mouth_height = CFace._get_feature_from_row(row, 'mouth_height', feature_map),
-                     eyebrow_length = CFace._get_feature_from_row(row, 'eyebrow_length', feature_map),
-                     eyebrow_angle = CFace._get_feature_from_row(row, 'eyebrow_angle', feature_map),
-                     eyebrow_height = CFace._get_feature_from_row(row, 'eyebrow_height', feature_map))
