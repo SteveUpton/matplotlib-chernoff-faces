@@ -369,8 +369,8 @@ class CFace():
         scaled_features = self.features
         for feature, value in self.features.items():
             scaled_features[feature] = CFace._scale_feature(value,
-                                                            min=self.feature_ranges[feature]['min'],
-                                                            max=self.feature_ranges[feature]['max'])
+                                                            new_min=self.feature_ranges[feature]['min'],
+                                                            new_max=self.feature_ranges[feature]['max'])
 
         # Draw nose
         nose = matplotlib.patches.Ellipse(xy=[0,0+scaled_features['nose_length']/4],
@@ -440,7 +440,7 @@ class CFace():
         return ax
 
     @staticmethod
-    def _scale_feature(value, min, max):
+    def _scale_feature(value, new_min, new_max):
         '''
         Takes a value in the range 0 to 1 and scales it to the new range, defined by min and max.
 
@@ -454,8 +454,8 @@ class CFace():
         '''
         old_min = 0
         old_range = 1
-        new_range = max - min
-        return (((value - old_min) * new_range) / old_range) + min
+        new_range = new_max - new_min
+        return (((value - old_min) * new_range) / old_range) + new_min
 
     @staticmethod
     def _normalise_value(value, old_min, old_range):

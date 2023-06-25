@@ -125,23 +125,23 @@ class TestCFacePlot:
 class TestScaleFeature:
 
     def test_scales_feature_given_0_1_range(self):
-        scaled_feature = CFace._scale_feature(0.5, min=0, max=1)
+        scaled_feature = CFace._scale_feature(0.5, new_min=0, new_max=1)
         assert scaled_feature ==  0.5
 
     def test_scales_feature_given_0_100_range(self):
-        scaled_feature = CFace._scale_feature(0.7, min=0, max=100)
+        scaled_feature = CFace._scale_feature(0.7, new_min=0, new_max=100)
         assert scaled_feature ==  70
 
     def test_scales_feature_given_negative_range(self):
-        scaled_feature = CFace._scale_feature(0.3, min=-100, max=100)
+        scaled_feature = CFace._scale_feature(0.3, new_min=-100, new_max=100)
         assert scaled_feature ==  -40
 
     def test_scales_to_max_of_range(self):
-        scaled_feature = CFace._scale_feature(1, min=0, max=1)
+        scaled_feature = CFace._scale_feature(1, new_min=0, new_max=1)
         assert scaled_feature ==  1
 
     def test_scales_to_min_of_range(self):
-        scaled_feature = CFace._scale_feature(0, min=0, max=1)
+        scaled_feature = CFace._scale_feature(0, new_min=0, new_max=1)
         assert scaled_feature ==  0
 
 class TestNormaliseDF:
