@@ -169,6 +169,49 @@ class TestNormaliseDF:
 
 class TestCreateCfaceFromRow:
     
+    @pytest.fixture
+    def feature_map_numeric_col_names(self):
+        return {
+            'nose_width': 0,
+            'nose_length': 1,
+            'head_width': 2,
+            'head_length': 3,
+            'eye_width': 4,
+            'eye_length': 5,
+            'eye_spacing': 6,
+            'eye_height': 7,
+            'eye_angle': 8,
+            'pupil_size': 9,
+            'mouth_length': 10,
+            'mouth_height': 11,
+            'eyebrow_length': 12,
+            'eyebrow_angle': 13,
+            'eyebrow_height': 14    
+        }
+
     def test_returns_cface(self):
         cface = CFace.create_cface_from_row({}, {})
         assert type(cface) is CFace
+
+    @pytest.mark.usefixtures('feature_map_numeric_col_names')
+    def test_returns_cface_2(self, feature_map_numeric_col_names):
+        cface = CFace.create_cface_from_row(pd.Series([0.01, 0.02, 0.03, 0.04, 0.05,
+                                                       0.06, 0.07, 0.08, 0.09, 0.10,
+                                                       0.11, 0.12, 0.13, 0.14, 0.15]),
+                                                       feature_map_numeric_col_names)
+        assert cface.features['nose_width'] == 0.01
+        assert cface.features['nose_length'] == 0.02
+        assert cface.features['head_width'] == 0.03
+        assert cface.features['head_length'] == 0.04
+        assert cface.features['eye_width'] == 0.05
+        assert cface.features['eye_length'] == 0.06
+        assert cface.features['eye_spacing'] == 0.07
+        assert cface.features['eye_height'] == 0.08
+        assert cface.features['eye_angle'] == 0.09
+        assert cface.features['pupil_size'] == 0.10
+        assert cface.features['mouth_length'] == 0.11
+        assert cface.features['mouth_height'] == 0.12
+        assert cface.features['eyebrow_length'] == 0.13
+        assert cface.features['eyebrow_angle'] == 0.14
+        assert cface.features['eyebrow_height'] == 0.15
+

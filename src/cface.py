@@ -290,7 +290,7 @@ class CFace():
             df (`pandas.DataFrame`): A normalised DataFrame.
             feature_map (dict): A mapping between Chernoff Face features and columns in the DataFrame.
         '''
-        normalised_df = df
+        normalised_df = df.copy()
 
         feature_list = list(reversed(CFace.feature_ranges.keys()))
         feature_map = {}
@@ -366,7 +366,7 @@ class CFace():
         ax.set_title(name, loc='left', x=0.02, y=0.02)
 
         # Scale features to appropriate, per feature ranges
-        scaled_features = self.features
+        scaled_features = self.features.copy()
         for feature, value in self.features.items():
             scaled_features[feature] = CFace._scale_feature(value,
                                                             new_min=self.feature_ranges[feature]['min'],
@@ -442,12 +442,12 @@ class CFace():
     @staticmethod
     def _scale_feature(value, new_min, new_max):
         '''
-        Takes a value in the range 0 to 1 and scales it to the new range, defined by min and max.
+        Takes a value in the range 0 to 1 and scales it to the new range, defined by new_min and new_max.
 
         Parameters:
             value (float): The value to be scaled.
-            min (float): The minimum of the new range.
-            max (float): The maximum of the new range.
+            new_min (float): The minimum of the new range.
+            new_max (float): The maximum of the new range.
 
         Returns:
             float
