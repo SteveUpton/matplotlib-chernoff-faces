@@ -215,3 +215,20 @@ class TestCreateCfaceFromRow:
         assert cface.features['eyebrow_angle'] == 0.14
         assert cface.features['eyebrow_height'] == 0.15
 
+class TestNormaliseValue:
+
+    def test_maintains_value_when_range_0_1(self):
+        normalised_value = CFace._normalise_value(value=0.5, old_min=0, old_range=1)
+        assert normalised_value == 0.5
+
+    def test_returns_1_when_range_0(self):
+        normalised_value = CFace._normalise_value(value=0.5, old_min=0, old_range=0)
+        assert normalised_value == 1
+
+    def test_normalises_value(self):
+        normalised_value = CFace._normalise_value(value=50, old_min=0, old_range=100)
+        assert normalised_value == 0.5
+
+    def test_normalises_negative_value(self):
+        normalised_value = CFace._normalise_value(value=-0.5, old_min=-1, old_range=1)
+        assert normalised_value == 0.5

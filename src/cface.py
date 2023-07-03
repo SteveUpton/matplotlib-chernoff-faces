@@ -466,7 +466,7 @@ class CFace():
         Parameters:
             value (float): The value to be scaled.
             old_min (float): The minimum of the old range.
-            old_max (float): The maximum of the old range.
+            old_range (float): The old range.
 
         Returns:
             float
