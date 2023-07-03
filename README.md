@@ -88,4 +88,6 @@ Your responsibilities are to clean your data and filter down to a set of records
 
 Before being used to create a Chernoff Face, your DataFrame must be normalised so each value is within the range 0 to 1 using the `CFace.normalise_df(df)` function, which returns a normalised DataFrame, while maintaining scaling within each column. Only numeric columns are normalised, all non-numeric columns are retained, but skipped for the purposes of Chernoff Face creation.
 
+I recommend that you filter down to a set of record that you want to compare as Chernoff Faces _before_ normalising the DataFrame. Within a given normalised DataFrame, the Chernoff Faces should be comparable, ie. their features should scale with the values themselves. If you normalise the DataFrame before filtering, the normalisation may result in outlier values being overrepresented in the Chernoff Face features. Chernoff Face visualisation is more suitable for analysis of timeseries and otherwise relatively comparable data.
+
 Internally, a Chernoff Face object stores each feature as a value between 0 and 1. You can manually edit these values, but I'm not sure why you'd want to do that. If you edit the features to ranges outside the range 0 to 1, the face will still draw, but it might look strange.

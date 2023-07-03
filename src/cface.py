@@ -69,8 +69,8 @@ class CFace():
             'default': 0.5
         },
         'eye_spacing': {
-            'min': 0.05,
-            'max': 0.35,
+            'min': 0.02,
+            'max': 0.23,
             'default': 0.5
         },
         'eye_height': {
@@ -100,7 +100,7 @@ class CFace():
         },
         'eyebrow_length': {
             'min': 0.10,
-            'max': 0.30,
+            'max': 0.40,
             'default': 0.5
         },
         'eyebrow_angle': {
@@ -110,7 +110,7 @@ class CFace():
         },
         'eyebrow_height': {
             'min': 0.00,
-            'max': 0.15,
+            'max': 0.20,
             'default': 0.5
         }
     }
@@ -331,12 +331,14 @@ class CFace():
         ax.add_artist(head)
 
         # Draw eyes
-        right_eye = matplotlib.patches.Ellipse(xy=[scaled_features['eye_spacing'], scaled_features['eye_height']],
+        right_eye = matplotlib.patches.Ellipse(xy=[scaled_features['eye_spacing'] + scaled_features['eye_width']/2,
+                                                   scaled_features['eye_height']],
                                                width=scaled_features['eye_width'],
                                                height=scaled_features['eye_length'],
                                                angle=scaled_features['eye_angle'])
         right_eye.set(edgecolor='Black', fill=False)
-        left_eye = matplotlib.patches.Ellipse(xy=[-scaled_features['eye_spacing'], scaled_features['eye_height']],
+        left_eye = matplotlib.patches.Ellipse(xy=[-scaled_features['eye_spacing'] - scaled_features['eye_width']/2,
+                                                  scaled_features['eye_height']],
                                               width=scaled_features['eye_width'],
                                               height=scaled_features['eye_length'],
                                               angle=-scaled_features['eye_angle'])
@@ -345,10 +347,12 @@ class CFace():
         ax.add_artist(left_eye)
 
         # Draw pupils
-        right_pupil = matplotlib.patches.Circle(xy=[scaled_features['eye_spacing'], scaled_features['eye_height']],
+        right_pupil = matplotlib.patches.Circle(xy=[scaled_features['eye_spacing'] + scaled_features['eye_width']/2,
+                                                    scaled_features['eye_height']],
                                                 radius=scaled_features['pupil_size'])
         right_pupil.set(color='Black')
-        left_pupil = matplotlib.patches.Circle(xy=[-scaled_features['eye_spacing'], scaled_features['eye_height']],
+        left_pupil = matplotlib.patches.Circle(xy=[-scaled_features['eye_spacing'] - scaled_features['eye_width']/2,
+                                                   scaled_features['eye_height']],
                                                radius=scaled_features['pupil_size'])
         left_pupil.set(color='Black')
         ax.add_artist(right_pupil)
@@ -357,7 +361,9 @@ class CFace():
         # Draw eyebrows
         eyebrow_opp = math.sin(math.radians(scaled_features['eyebrow_angle'])) * scaled_features['eyebrow_length']
         eyebrow_adj = math.cos(math.radians(scaled_features['eyebrow_angle'])) * scaled_features['eyebrow_length']
-        eyebrow_spacing = scaled_features['eye_spacing'] - scaled_features['eyebrow_length']/2
+        eyebrow_spacing = scaled_features['eye_spacing'] + \
+                          scaled_features['eye_width']/2 - \
+                          scaled_features['eyebrow_length']/2
         eyebrow_height_adjusted = (scaled_features['eye_height'] + scaled_features['eyebrow_height'] +
                                    scaled_features['eye_width']/2 + 0.05)
         right_eyebrow = matplotlib.lines.Line2D(xdata=[eyebrow_spacing, eyebrow_spacing+eyebrow_adj],
