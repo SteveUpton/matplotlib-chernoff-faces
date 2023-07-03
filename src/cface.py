@@ -3,62 +3,6 @@
 face to a supplied `Axes`. Static helper methods allow for the normalisation of a `pandas.DataFrame`
 to prepare it for use in Chernoff Face creation, and the creation of a Chernoff Face when supplied
 with a row from a normalised DataFrame.
-
-The suggested workflow is:
-
-    import matplotlib.pyplot as plt
-    import pandas as pd
-
-    from cface import CFace
-
-    df = pd.read_csv('data.csv')
-    df = df_satcat.set_index('Name')
-
-    # Clean and filter the data you want to visualise as Chernoff Faces
-
-    # Normalise the dataframe to prepare for Chernoff Face creation
-    df_faces, feature_map = CFace.normalise_df(df)
-
-    # If you want to change the mapping from features to columns, now is the time
-
-    # Create Chernoff Faces for each row of the DataFrame
-    df_faces['cface'] = df_faces.apply(CFace.create_cface_from_row, axis=1, feature_map=feature_map)
-
-    # Visualise the Chernoff faces (this example assumes 20 rows in df_faces and a Name column)
-    fig = plt.figure(figsize=(10,8))
-    for i in range(len(df_faces)):
-        ax = fig.add_subplot(4, 5, i+1, aspect='equal')
-        df_faces.iloc[i, df_faces.columns.get_loc("cface")].plot(ax, df_faces.iloc[i]['Name'])
-
-    plt.show()
-
-You can also create a Chernoff Face directly
-
-    # Create a Chernoff Face, specifying which features (range: 0-1) you want to change
-    cface = CFace(nose_width = 1,
-                  nose_length = 1,
-                  head_width = 1,
-                  head_length = 1,
-                  eye_width = 1,
-                  eye_length = 1,
-                  eye_spacing = 1,
-                  eye_height = 1,
-                  eye_angle = 1,
-                  pupil_size = 1,
-                  mouth_length = 1,
-                  mouth_height = 1,
-                  eyebrow_length = 1,
-                  eyebrow_angle = 1,
-                  eyebrow_height = 1)
-
-    fig, axes = plt.subplots()
-    ax = cface.plot(axes)
-    plt.show()
-
-Your responsibilities are to clean your data and filter down to a set of records that you want to compare
-as Chernoff Faces. The Chernoff Face module is responsible for turning your DataFrame into a set of Chernoff
-Faces that you can visualise on `matplotlib.axes.Axes`. You are responsible for how to visualise that onto
-a `matplotlib.pyplot.figure`.
 """
 import math
 import matplotlib
