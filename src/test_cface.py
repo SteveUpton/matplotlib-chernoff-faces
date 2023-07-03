@@ -4,6 +4,26 @@ import pytest
 
 from cface import CFace
 
+@pytest.fixture
+def feature_map_numeric_col_names():
+    return {
+        'nose_width': 0,
+        'nose_length': 1,
+        'head_width': 2,
+        'head_length': 3,
+        'eye_width': 4,
+        'eye_length': 5,
+        'eye_spacing': 6,
+        'eye_height': 7,
+        'eye_angle': 8,
+        'pupil_size': 9,
+        'mouth_length': 10,
+        'mouth_height': 11,
+        'eyebrow_length': 12,
+        'eyebrow_angle': 13,
+        'eyebrow_height': 14
+    }
+
 class TestCFace:
 
     def test_sets_default_feature_values(self):
@@ -167,27 +187,8 @@ class TestNormaliseDF:
         prepped_df, feature_map = CFace.normalise_df(df_simple)
         assert list(feature_map.values()) == prepped_df.columns.values.tolist()
 
+@pytest.mark.usefixtures('feature_map_numeric_col_names')
 class TestCreateCfaceFromRow:
-    
-    @pytest.fixture
-    def feature_map_numeric_col_names(self):
-        return {
-            'nose_width': 0,
-            'nose_length': 1,
-            'head_width': 2,
-            'head_length': 3,
-            'eye_width': 4,
-            'eye_length': 5,
-            'eye_spacing': 6,
-            'eye_height': 7,
-            'eye_angle': 8,
-            'pupil_size': 9,
-            'mouth_length': 10,
-            'mouth_height': 11,
-            'eyebrow_length': 12,
-            'eyebrow_angle': 13,
-            'eyebrow_height': 14    
-        }
 
     def test_returns_cface(self):
         cface = CFace.create_cface_from_row({}, {})
@@ -232,3 +233,27 @@ class TestNormaliseValue:
     def test_normalises_negative_value(self):
         normalised_value = CFace._normalise_value(value=-0.5, old_min=-1, old_range=1)
         assert normalised_value == 0.5
+
+@pytest.mark.usefixtures('feature_map_numeric_col_names')
+class TestGetFeatureFromRow:
+
+    def test_returns_default_value_if_no_feature_mapping(self):
+        value = CFace._get_feature_from_row({}, 'nose_width', {})
+        assert value == 0.5
+
+    @pytest.mark.usefixtures('feature_map_numeric_col_names')
+    def test_returns_mapped_value(self, feature_map_numeric_col_names):
+        value = CFace._get_feature_from_row(pd.Series([0.01, 0.02, 0.03, 0.04, 0.05,
+                                                       0.06, 0.07, 0.08, 0.09, 0.10,
+                                                       0.11, 0.12, 0.13, 0.14, 0.15]),
+                                                       'nose_width',
+                                                       feature_map_numeric_col_names)
+        assert value == 0.01
+
+    def test_rejects_features_too_large(self):
+        with pytest.raises(KeyError):
+            CFace._get_feature_from_row(pd.Series([0.01, 0.02, 0.03, 0.04, 0.05,
+                                                       0.06, 0.07, 0.08, 0.09, 0.10,
+                                                       0.11, 0.12, 0.13, 0.14, 0.15]),
+                                                       'nose_width',
+                                                       {'nose_width': 'non_existent_key'})
