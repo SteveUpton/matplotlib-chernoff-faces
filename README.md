@@ -17,7 +17,7 @@ df = pd.read_csv('data.csv')
 
 # Clean and filter the data you want to visualise as Chernoff Faces
 
-# Normalise the dataframe to prepare for Chernoff Face creation
+# Normalise the DataFrame to prepare for Chernoff Face creation
 df_faces, feature_map = CFace.normalise_df(df)
 
 # If you want to change the mapping from features to columns, now is the time
@@ -26,7 +26,7 @@ df_faces, feature_map = CFace.normalise_df(df)
 # Create a Chernoff Face for each row of the DataFrame
 df_faces['cface'] = df_faces.apply(CFace.create_cface_from_row, axis=1, feature_map=feature_map)
 
-# Visualise the Chernoff faces (this example assumes 20 rows in df_faces
+# Visualise the Chernoff Faces (this example assumes 20 rows in df_faces)
 fig = plt.figure(figsize=(10,8))
 for i in range(len(df_faces)):
     ax = fig.add_subplot(4, 5, i+1, aspect='equal')
@@ -82,11 +82,22 @@ ax = cface.plot(axes)
 plt.show()
 ```
 
+## The faces
+The 3 faces below are manually created Chernoff Faces:
+- min: All features set to minimum values (0)
+- default: All features set to default values (0.5)
+- max: All features set to maximum values (1)
+
+![Three Chernoff Faces, representing all features set to the minimum, all features set to the default value and all features set to the maximum.](/examples/faces.png)
+
+The code to generate this visualisation can be found in [examples/3_face_example.py](examples/3_face_example.py)
+
+
 ## Things to keep in mind
 Your responsibilities are to clean your data and filter down to a set of records that you want to compare as Chernoff Faces. The Chernoff Face module is responsible for turning your DataFrame into a Chernoff Faces that you can be plotted on a `matplotlib.axes.Axes`. You are responsible for how to plot those onto a `matplotlib.pyplot.figure`.
 
 Before being used to create a Chernoff Face, your DataFrame must be normalised so each value is within the range 0 to 1 using the `CFace.normalise_df(df)` function, which returns a normalised DataFrame, while maintaining scaling within each column. Only numeric columns are normalised, all non-numeric columns are retained, but skipped for the purposes of Chernoff Face creation.
 
-I recommend that you filter down to a set of records that you want to compare as Chernoff Faces _before_ normalising the DataFrame. Within a given normalised DataFrame, the Chernoff Faces should be comparable, ie. their features should scale with the values themselves. If you normalise the DataFrame before filtering, the normalisation may result in outlier values being overrepresented in the Chernoff Face features. Chernoff Faces from DataFrames that have been normalised separately will _not_ be directly comparable. Chernoff Face visualisation is more suitable for analysis of timeseries and otherwise relatively comparable data.
+I recommend that you filter down to a set of records that you want to compare as Chernoff Faces _before_ normalising the DataFrame. Within a given normalised DataFrame, the Chernoff Faces should be comparable, ie. their features should scale with the values themselves. If you normalise the DataFrame before filtering, the normalisation may result in outlier values being overrepresented in the Chernoff Face features. Chernoff Faces from DataFrames that have been normalised separately will _not_ be directly comparable. Chernoff Face visualisation is probably more suitable for analysis of timeseries and otherwise relatively comparable data.
 
 Internally, a Chernoff Face object stores each feature as a value between 0 and 1. You can manually edit these values, but I'm not sure why you'd want to do that. If you edit the features to ranges outside the range 0 to 1, the face will still draw, but it might look strange.
