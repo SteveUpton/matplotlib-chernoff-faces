@@ -40,97 +40,82 @@ class CFace():
     feature_ranges = {
         'nose_width': {
             'min': 0.01,
-            'max': 0.10,
-            'default': 0.5
+            'max': 0.10
         },
         'nose_length': {
             'min': 0.10,
-            'max': 0.50,
-            'default': 0.5
+            'max': 0.50
         },
         'head_width': {
             'min': 0.80,
-            'max': 2,
-            'default': 0.5
+            'max': 2
         },
         'head_length': {
             'min': 0.80,
-            'max': 2,
-            'default': 0.5
+            'max': 2
         },
         'eye_width': {
             'min': 0.10,
-            'max': 0.30,
-            'default': 0.5
+            'max': 0.30
         },
         'eye_length': {
             'min': 0.10,
-            'max': 0.35,
-            'default': 0.5
+            'max': 0.35
         },
         'eye_spacing': {
             'min': 0.02,
-            'max': 0.23,
-            'default': 0.5
+            'max': 0.23
         },
         'eye_height': {
             'min': 0.1,
-            'max': 0.3,
-            'default': 0.5
+            'max': 0.3
         },
         'eye_angle': {
             'min': 70.00,
-            'max': 110,
-            'default': 0.5
+            'max': 110
         },
         'pupil_size': {
             'min': 0.01,
-            'max': 0.07,
-            'default': 0.5
+            'max': 0.07
         },
         'mouth_length': {
             'min': 10,
-            'max': 100,
-            'default': 0.5
+            'max': 100
         },
         'mouth_height': {
             'min': 0.01,
-            'max': 0.5,
-            'default': 0.5
+            'max': 0.5
         },
         'eyebrow_length': {
             'min': 0.10,
-            'max': 0.40,
-            'default': 0.5
+            'max': 0.40
         },
         'eyebrow_angle': {
             'min': -20.00,
-            'max': 20.0,
-            'default': 0.5
+            'max': 20.0
         },
         'eyebrow_height': {
             'min': 0.00,
-            'max': 0.20,
-            'default': 0.5
+            'max': 0.20
         }
     }
 
     def __init__(self,
-                 nose_width=feature_ranges['nose_width']['default'],
-                 nose_length=feature_ranges['nose_length']['default'],
-                 head_width=feature_ranges['head_width']['default'],
-                 head_length=feature_ranges['head_length']['default'],
-                 eye_length=feature_ranges['eye_length']['default'],
-                 eye_width=feature_ranges['eye_width']['default'],
-                 eye_spacing=feature_ranges['eye_spacing']['default'],
-                 eye_height=feature_ranges['eye_height']['default'],
-                 eye_angle=feature_ranges['eye_angle']['default'],
-                 pupil_size=feature_ranges['pupil_size']['default'],
-                 mouth_length=feature_ranges['mouth_length']['default'],
-                 mouth_height=feature_ranges['mouth_height']['default'],
-                 eyebrow_length=feature_ranges['eyebrow_length']['default'],
-                 eyebrow_angle=feature_ranges['eyebrow_angle']['default'],
-                 eyebrow_height=feature_ranges['eyebrow_height']['default']):
+                 nose_width=0.5,
+                 nose_length=0.5,
+                 head_width=0.5,
+                 head_length=0.5,
+                 eye_length=0.5,
+                 eye_width=0.5,
+                 eye_spacing=0.5,
+                 eye_height=0.5,
+                 eye_angle=0.5,
+                 pupil_size=0.5,
+                 mouth_length=0.5,
+                 mouth_height=0.5,
+                 eyebrow_length=0.5,
+                 eyebrow_angle=0.5,
+                 eyebrow_height=0.5):
         '''
         Parameters:
             nose_width (float) : default: 0.5, range: (0-1)
@@ -431,8 +416,7 @@ class CFace():
         Given a row (`pandas.Series`), extracts the value for `feature_name` from the appropriate column
         as described by the mapping in `feature_map`.
 
-        If `feature_name` is not present in the `feature_map`, then the default value for that feature
-        is returned.
+        If `feature_name` is not present in the `feature_map`, then the default value of 0.5 is returned.
 
         Parameters:
             row (`pandas.Series`): The row from which to extract the feature.
@@ -443,5 +427,5 @@ class CFace():
             float
         '''
         if not feature_name in feature_map:
-            return CFace.feature_ranges[feature_name]['default']
+            return 0.5
         return row[feature_map[feature_name]]
