@@ -50,4 +50,4 @@ for i in range(len(df)):
 
 fig.subplots_adjust(hspace=0, wspace=0)
 
-plt.savefig('faces.png', bbox_inches='tight')
+plt.savefig('3_faces.png', bbox_inches='tight')
