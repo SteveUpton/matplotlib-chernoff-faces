@@ -2,7 +2,14 @@
 A Python module to visualise a Pandas DataFrame or arbitrary data as Chernoff Faces, using Matplotlib.
 
 ## Installation
-Coming soon
+For now, you can copy [cface.py](examples/csv_example.py) to your working directory and install the dependencies manually with:
+
+```
+pip install matplotlib pandas
+```
+
+Proper instructions coming as soon as I have time to figure out how to publish a package to PyPI.
+
 ## Usage
 Typically, I start data analysis by loading the data into a pandas DataFrame, so this module assumes that as a starting point. The suggested workflow is:
 
@@ -102,3 +109,15 @@ Before being used to create a Chernoff Face, your DataFrame must be normalised s
 I recommend that you filter down to a set of records that you want to compare as Chernoff Faces _before_ normalising the DataFrame. Within a given normalised DataFrame, the Chernoff Faces should be comparable, ie. their features should scale with the values themselves. If you normalise the DataFrame before filtering, the normalisation may result in outlier values being overrepresented in the Chernoff Face features. Chernoff Faces from DataFrames that have been normalised separately will _not_ be directly comparable. Chernoff Face visualisation is probably more suitable for analysis of timeseries and otherwise relatively comparable data.
 
 Internally, a Chernoff Face object stores each feature as a value between 0 and 1. If you edit the features to values outside the range 0 to 1, the face will still draw, but it might look strange.
+
+## Development
+Clone the repo and install the dependencies:
+
+```
+pip install -r requirements.txt
+```
+
+Run the tests:
+```
+pytest src/
+```
